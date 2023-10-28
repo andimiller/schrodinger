@@ -19,7 +19,7 @@ import scala.collection.SortedSet
   *   log of the number of items to keep
   */
 case class SimpleThetaSketch[LgK <: Int: ValueOf](hashes: SortedSet[Int]) {
-  lazy val maxItems: Int = Math.pow(2, valueOf[LgK]).toInt
+  lazy val maxItems: Int = Math.pow(2, valueOf[LgK].toDouble).toInt
   lazy val theta: Double =
     (((hashes.max.toDouble / Int.MaxValue.toDouble) + 1) / 2)
 
@@ -39,7 +39,7 @@ object SimpleThetaSketch {
   )(implicit hasher: Hasher[Input, Int]): SimpleThetaSketch[LgK] = {
     val maxItems =
       Math
-        .pow(2, valueOf[LgK])
+        .pow(2, valueOf[LgK].toDouble)
         .toInt // we keep items equal to 2 to the power of LgK
 
     BoundedSemilattice[SimpleThetaSketch[LgK]].combineAll(

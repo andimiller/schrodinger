@@ -16,9 +16,11 @@
 
 package net.andimiller.schrodinger.simple.arb
 
-import net.andimiller.schrodinger.{Hasher, HasherFactory}
+import net.andimiller.schrodinger.Hasher
+import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.simple.SimpleThetaSketch
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 
 trait SimpleThetaSketchArbitraries {
 

@@ -16,12 +16,13 @@
 
 package net.andimiller.schrodinger.simple
 
-import cats.implicits.*
 import cats.data.NonEmptyList
+import cats.implicits.*
 import cats.kernel.laws.BoundedSemilatticeLaws
 import cats.kernel.laws.discipline.BoundedSemilatticeTests
 import munit.DisciplineSuite
-import net.andimiller.schrodinger.{Hasher, HasherFactory}
+import net.andimiller.schrodinger.Hasher
+import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.simple.arb.SimpleThetaSketchArbitraries
 
 class SimpleThetaSketchTests
