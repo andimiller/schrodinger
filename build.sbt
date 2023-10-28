@@ -1,3 +1,5 @@
+import sbtwelcome._
+
 // https://typelevel.org/sbt-typelevel/faq.html#what-is-a-base-version-anyway
 ThisBuild / tlBaseVersion := "0.0" // your current series x.y
 
@@ -23,12 +25,11 @@ ThisBuild / scalaVersion := Scala213 // the default Scala
 ThisBuild / githubWorkflowPublishTargetBranches := Seq() // CI doesn't need to publish, I'll do that myself for now
 ThisBuild / githubWorkflowJavaVersions := List(JavaSpec.temurin("11"))
 
-// sbt-welcome stuff, logo and common tasks
-import sbtwelcome._
-
-logoColor := scala.Console.MAGENTA
-
-logo := s"""
+lazy val root = tlCrossRootProject
+  .aggregate(core, simple, hash4j)
+  .settings(
+    logoColor := scala.Console.MAGENTA,
+    logo := s"""
 ███████╗ ██████╗██╗  ██╗██████╗  ██████╗ ██████╗ ██╗███╗   ██╗ ██████╗ ███████╗██████╗ 
 ██╔════╝██╔════╝██║  ██║██╔══██╗██╔═══██╗██╔══██╗██║████╗  ██║██╔════╝ ██╔════╝██╔══██╗
 ███████╗██║     ███████║██████╔╝██║   ██║██║  ██║██║██╔██╗ ██║██║  ███╗█████╗  ██████╔╝
@@ -39,34 +40,37 @@ logo := s"""
 ${version.value}
 
 ${scala.Console.YELLOW}Scala ${scalaVersion.value}${scala.Console.RESET}
-"""
+""",
+    usefulTasks := Seq(
+      UsefulTask("test", "Test with current config").alias("t"),
+      UsefulTask(
+        "scalafmtAll; scalafmtSbt; scalafixAll; headerCreateAll",
+        "Fix all formatting"
+      ).alias("f")
+    )
+  )
 
-usefulTasks := Seq(
-  UsefulTask("test", "Test with current config").alias("t"),
-  UsefulTask(
-    "scalafmtAll; scalafmtSbt; scalafixAll; headerCreateAll",
-    "Fix all formatting"
-  ).alias("f")
+lazy val commonSettings = Seq(
+  logo := ""
 )
-
-lazy val root = tlCrossRootProject.aggregate(core, simple, hash4j)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("core"))
+  .settings(commonSettings: _*)
   .settings(
     name := "schrodinger",
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % "2.9.0",
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test
-    ),
-    logo := ""
+    )
   )
 
 lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("simple"))
   .dependsOn(core)
+  .settings(commonSettings: _*)
   .settings(
     name := "schrodinger-simple",
     libraryDependencies ++= Seq(
@@ -74,14 +78,14 @@ lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
       "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
-    ),
-    logo := ""
+    )
   )
 
 lazy val hash4j = crossProject(JVMPlatform)
   .crossType(CrossType.Full)
   .in(file("hash4j"))
   .dependsOn(core)
+  .settings(commonSettings: _*)
   .settings(
     name := "schrodinger-hash4j",
     libraryDependencies ++= Seq(
@@ -89,8 +93,12 @@ lazy val hash4j = crossProject(JVMPlatform)
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
       "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
-    ),
-    logo := ""
+    )
   )
 
-lazy val docs = project.in(file("site")).enablePlugins(TypelevelSitePlugin)
+lazy val docs = project
+  .in(file("site"))
+  .enablePlugins(TypelevelSitePlugin)
+  .settings(
+    logo := "" // TODO add useful tasks here for docs stuff
+  )
