@@ -75,4 +75,18 @@ lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     )
   )
 
+lazy val hash4j = crossProject(JVMPlatform)
+  .crossType(CrossType.Full)
+  .in(file("hash4j"))
+  .dependsOn(core)
+  .settings(
+    name := "schrodinger-hash4j",
+    libraryDependencies ++= Seq(
+      "com.dynatrace.hash4j" % "hash4j" % "0.13.0",
+      "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
+      "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
+      "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
+    )
+  )
+
 lazy val docs = project.in(file("site")).enablePlugins(TypelevelSitePlugin)
