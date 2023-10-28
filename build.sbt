@@ -22,6 +22,32 @@ ThisBuild / crossScalaVersions := Seq(Scala213, "3.3.1")
 ThisBuild / scalaVersion := Scala213 // the default Scala
 ThisBuild / githubWorkflowPublishTargetBranches := Seq() // CI doesn't need to publish, I'll do that myself for now
 
+// sbt-welcome stuff, logo and common tasks
+import sbtwelcome._
+
+logoColor := scala.Console.MAGENTA
+
+logo := s"""
+███████╗ ██████╗██╗  ██╗██████╗  ██████╗ ██████╗ ██╗███╗   ██╗ ██████╗ ███████╗██████╗ 
+██╔════╝██╔════╝██║  ██║██╔══██╗██╔═══██╗██╔══██╗██║████╗  ██║██╔════╝ ██╔════╝██╔══██╗
+███████╗██║     ███████║██████╔╝██║   ██║██║  ██║██║██╔██╗ ██║██║  ███╗█████╗  ██████╔╝
+╚════██║██║     ██╔══██║██╔══██╗██║   ██║██║  ██║██║██║╚██╗██║██║   ██║██╔══╝  ██╔══██╗
+███████║╚██████╗██║  ██║██║  ██║╚██████╔╝██████╔╝██║██║ ╚████║╚██████╔╝███████╗██║  ██║
+╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
+
+${version.value}
+
+${scala.Console.YELLOW}Scala ${scalaVersion.value}${scala.Console.RESET}
+"""
+
+usefulTasks := Seq(
+  UsefulTask("test", "Test with current config").alias("t"),
+  UsefulTask(
+    "scalafmtAll; scalafmtSbt; scalafixAll; headerCreateAll",
+    "Fix all formatting"
+  ).alias("f")
+)
+
 lazy val root = tlCrossRootProject.aggregate(core, simple)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -31,9 +57,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     name := "schrodinger",
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % "2.9.0",
-      "org.typelevel" %%% "cats-effect" % "3.5.1",
-      "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
-      "org.typelevel" %%% "munit-cats-effect" % "2.0.0-M3" % Test
+      "org.scalameta" %%% "munit" % "1.0.0-M10" % Test
     )
   )
 
