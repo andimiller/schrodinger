@@ -24,7 +24,7 @@ trait UltraLogLogInstances {
   // you'll need to provide an implicit one of these to get instances, since we need to know the P value
   case class UltraLogLogP(value: Int)
 
-  implicit def boundedSemilattice(implicit
+  implicit def ullBoundedSemilattice(implicit
       p: UltraLogLogP
   ): BoundedSemilattice[UltraLogLog] = new BoundedSemilattice[UltraLogLog] {
     override def empty: UltraLogLog = UltraLogLog.create(p.value)
@@ -36,7 +36,7 @@ trait UltraLogLogInstances {
     }
   }
 
-  implicit val eq: Eq[UltraLogLog] = new Eq[UltraLogLog] {
+  implicit val ullEq: Eq[UltraLogLog] = new Eq[UltraLogLog] {
     override def eqv(x: UltraLogLog, y: UltraLogLog): Boolean =
       (x.getP == y.getP) && (x.getState sameElements y.getState)
   }
