@@ -51,4 +51,3 @@ lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   )
 
 lazy val docs = project.in(file("site")).enablePlugins(TypelevelSitePlugin)
-
