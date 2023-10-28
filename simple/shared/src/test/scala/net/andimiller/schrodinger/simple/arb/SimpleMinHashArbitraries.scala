@@ -19,7 +19,8 @@ package net.andimiller.schrodinger.simple.arb
 import cats.data.NonEmptyLazyList
 import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.simple.SimpleMinHash
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 
 trait SimpleMinHashArbitraries {
 

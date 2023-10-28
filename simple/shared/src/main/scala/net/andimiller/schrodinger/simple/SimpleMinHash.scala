@@ -17,8 +17,8 @@
 package net.andimiller.schrodinger.simple
 
 import cats.Eq
-import cats.data.{NonEmptyLazyList, NonEmptyLazyListOps}
-import cats.kernel.{BoundedSemilattice, Semilattice}
+import cats.data.NonEmptyLazyList
+import cats.kernel.Semilattice
 import net.andimiller.schrodinger.HasherFactory
 
 /** An implementation of MinHash using 32-bit hashes stored in a Vector
