@@ -48,7 +48,7 @@ usefulTasks := Seq(
   ).alias("f")
 )
 
-lazy val root = tlCrossRootProject.aggregate(core, simple)
+lazy val root = tlCrossRootProject.aggregate(core, simple, hash4j)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Full)
@@ -58,7 +58,8 @@ lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % "2.9.0",
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test
-    )
+    ),
+    logo := ""
   )
 
 lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -72,7 +73,8 @@ lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
       "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
-    )
+    ),
+    logo := ""
   )
 
 lazy val hash4j = crossProject(JVMPlatform)
@@ -86,7 +88,8 @@ lazy val hash4j = crossProject(JVMPlatform)
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
       "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
-    )
+    ),
+    logo := ""
   )
 
 lazy val docs = project.in(file("site")).enablePlugins(TypelevelSitePlugin)

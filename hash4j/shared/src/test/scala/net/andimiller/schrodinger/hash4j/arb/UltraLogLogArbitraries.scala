@@ -20,7 +20,8 @@ import cats.kernel.Monoid
 import com.dynatrace.hash4j.distinctcount.UltraLogLog
 import com.dynatrace.hash4j.hashing.Hashing
 import net.andimiller.schrodinger.hash4j.UltraLogLogInstances
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary
+import org.scalacheck.Gen
 
 trait UltraLogLogArbitraries extends UltraLogLogInstances {
 
