@@ -6,8 +6,21 @@ This project contains implementations of probabilistic data structures in scala,
 
 It also contains instances and tests for well known JVM probabilistic data structures, so that you can use them easily with cats, and confirm they meet the expected laws.
 
-## Similarity
+## Included Data Types
 
 ### Minhash
 
-A `MinHash` implementation is provided as `SimpleMinHash`, it uses any 32-bit hash and is a lawful `Semilattice`.
+A MinHash implementation is provided as `SimpleMinHash`.
+
+Provides:
+* Jaccard
+* Union - Semilattice
+
+### Theta Sketch
+
+A Theta Sketch implementation is provided as `SimpleThetaSketch`
+
+Provides:
+* Cardinality
+* Union - BoundedSemilattice
+* (To be added, Intersection and Diff)
