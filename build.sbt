@@ -3,6 +3,7 @@ ThisBuild / tlBaseVersion := "0.0" // your current series x.y
 
 ThisBuild / organization := "net.andimiller"
 ThisBuild / organizationName := "andimiller"
+ThisBuild / organizationHomepage := Some(url("https://andimiller.net"))
 ThisBuild / startYear := Some(2023)
 ThisBuild / licenses := Seq(License.Apache2)
 ThisBuild / developers := List(
@@ -14,7 +15,7 @@ ThisBuild / developers := List(
 ThisBuild / tlSonatypeUseLegacyHost := false
 
 // publish website from this branch
-ThisBuild / tlSitePublishBranch := Some("main")
+ThisBuild / tlSitePublishBranch := None // don't publish yet
 
 val Scala213 = "2.13.12"
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.3.1")
