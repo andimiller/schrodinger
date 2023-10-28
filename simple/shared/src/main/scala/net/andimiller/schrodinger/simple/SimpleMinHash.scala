@@ -32,7 +32,7 @@ import net.andimiller.schrodinger.HasherFactory
   * @tparam HashCount
   *   Number of hash variants to store, this should be the length of the Vector
   */
-case class SimpleMinHash[HashCount <: Int: ValueOf](hashes: Vector[Int]) {}
+case class SimpleMinHash[HashCount <: Int](hashes: Vector[Int]) {}
 
 object SimpleMinHash {
 
@@ -62,7 +62,7 @@ object SimpleMinHash {
   }
 
   // when combining minhashes, we take the minimum hash for each index
-  implicit def semilattice[HashCount <: Int: ValueOf]
+  implicit def semilattice[HashCount <: Int]
       : Semilattice[SimpleMinHash[HashCount]] =
     (x: SimpleMinHash[HashCount], y: SimpleMinHash[HashCount]) =>
       SimpleMinHash(
@@ -71,7 +71,7 @@ object SimpleMinHash {
         }
       )
 
-  implicit def eq[HashCount <: Int: ValueOf]: Eq[SimpleMinHash[HashCount]] =
+  implicit def eq[HashCount <: Int]: Eq[SimpleMinHash[HashCount]] =
     Eq.by(_.hashes)
 
 }
