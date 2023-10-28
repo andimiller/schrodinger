@@ -21,6 +21,7 @@ val Scala213 = "2.13.12"
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.3.1")
 ThisBuild / scalaVersion := Scala213 // the default Scala
 ThisBuild / githubWorkflowPublishTargetBranches := Seq() // CI doesn't need to publish, I'll do that myself for now
+ThisBuild / githubWorkflowJavaVersions := List(JavaSpec.temurin("11"))
 
 // sbt-welcome stuff, logo and common tasks
 import sbtwelcome._
