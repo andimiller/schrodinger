@@ -6,6 +6,13 @@ This project contains implementations of probabilistic data structures in scala,
 
 It also contains instances and tests for well known JVM probabilistic data structures, so that you can use them easily with cats, and confirm they meet the expected laws.
 
+## Abstractions
+
+### `SimilarityHash[T]`
+
+* Has a method that can create a `T` from a `NonEmptyLazyList[Long]`
+* Extends `Semilattice` and adds the distributive law.
+
 ## Included Data Types (Simple Module)
 
 ### Minhash
@@ -28,4 +35,5 @@ Provides:
 ## hash4j integration
 
 * `UltraLogLog` - `BoundedSemilattice`
-* `MinHash` - `Semilattice`
+* `MinHash` - `SimilarityHash` + `Semilattice` but only if bit size is 64
+* `SuperMinHash` - `SimilarityHash` + `Semilattice` on all bit sizes
