@@ -17,32 +17,25 @@
 package net.andimiller.schrodinger.hash4j.arb
 
 import cats.data.NonEmptyLazyList
-import cats.data.NonEmptyList
 import com.dynatrace.hash4j.hashing.Hashing
 import net.andimiller.schrodinger.Hasher
-import net.andimiller.schrodinger.hash4j.MinHash
+import net.andimiller.schrodinger.hash4j.SuperMinHash
 import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
 
-trait MinHashArbitraries {
+trait SuperMinHashArbitraries {
 
-  implicit val nelString: Arbitrary[NonEmptyList[String]] =
-    Arbitrary(
-      Gen
-        .nonEmptyListOf(Gen.alphaNumStr)
-        .map(NonEmptyList.fromListUnsafe)
-    )
-
-  implicit def simpleMinHashArb[
-      Components <: Int: ValueOf
-  ]: Arbitrary[MinHash[Components]] = {
+  implicit def simpleSuperMinHashArb[
+      Components <: Int: ValueOf,
+      Bits <: Int: ValueOf
+  ]: Arbitrary[SuperMinHash[Components, Bits]] = {
     implicit val wyhash: Hasher[String, Long] =
       Hashing.wyhashFinal4().hashCharsToLong(_)
     Arbitrary(
       Gen
         .nonEmptyListOf(Gen.alphaNumStr)
         .map { strings =>
-          MinHash.fromItems[Components, String](
+          SuperMinHash.fromItems[Components, Bits, String](
             NonEmptyLazyList.fromLazyListUnsafe(
               LazyList.from(strings)
             ),

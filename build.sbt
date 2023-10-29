@@ -62,14 +62,16 @@ lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     name := "schrodinger",
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % "2.9.0",
-      "org.scalameta" %%% "munit" % "1.0.0-M10" % Test
+      "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
+      "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
+      "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
     )
   )
 
 lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Full)
   .in(file("simple"))
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings: _*)
   .settings(
     name := "schrodinger-simple",
@@ -84,7 +86,7 @@ lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
 lazy val hash4j = crossProject(JVMPlatform)
   .crossType(CrossType.Full)
   .in(file("hash4j"))
-  .dependsOn(core)
+  .dependsOn(core % "compile->compile;test->test")
   .settings(commonSettings: _*)
   .settings(
     name := "schrodinger-hash4j",

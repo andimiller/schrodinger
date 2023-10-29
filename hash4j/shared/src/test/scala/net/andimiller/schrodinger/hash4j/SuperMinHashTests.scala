@@ -14,43 +14,46 @@
  * limitations under the License.
  */
 
-package net.andimiller.schrodinger.simple
+package net.andimiller.schrodinger.hash4j
 
 import cats.data.NonEmptyLazyList
+import com.dynatrace.hash4j.hashing.Hashing
 import munit.DisciplineSuite
-import net.andimiller.schrodinger.HasherFactory
+import net.andimiller.schrodinger.Hasher
 import net.andimiller.schrodinger.HashesArbitrary
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
-import net.andimiller.schrodinger.simple.arb.SimpleMinHashArbitraries
+import net.andimiller.schrodinger.hash4j.arb.SuperMinHashArbitraries
 
-class SimpleMinHashTests
+class SuperMinHashTests
     extends DisciplineSuite
-    with SimilarityHashTests[SimpleMinHash[32]]
-    with SimpleMinHashArbitraries
+    with SimilarityHashTests[SuperMinHash[512, 16]]
+    with SuperMinHashArbitraries
     with HashesArbitrary {
 
   checkAll(
-    "SimpleMinHash[32]",
-    similarityHash
+    "SuperMinHash[512, 16]",
+    semilattice
   )
 
-  test("Jaccard should give an expected value") {
-    implicit val hasherFactory: HasherFactory[Int, String, Int] =
-      HasherFactory.murmur3
+  test("Should do some vaguely sensible jaccard calculations") {
+    implicit val wyhash: Hasher[String, Long] =
+      Hashing.wyhashFinal4().hashCharsToLong(_)
     val one =
-      SimpleMinHash.fromItems[1024, String](NonEmptyLazyList("hello", "world"))
+      SuperMinHash.fromItems[512, 16, String](
+        NonEmptyLazyList("hello", "world")
+      )
     val two =
-      SimpleMinHash.fromItems[1024, String](NonEmptyLazyList("hello"))
+      SuperMinHash.fromItems[512, 16, String](NonEmptyLazyList("hello"))
 
     assertEqualsDouble(
-      SimpleMinHash.jaccard(one, two),
+      one jaccard two,
       0.5,
-      delta = 0.03,
-      "Expected jaccard to be around 0.5"
+      0.01,
+      "jaccard should be around 0.5"
     )
   }
 
-  override def laws: SimilarityHashLaws[SimpleMinHash[32]] =
-    SimilarityHashLaws[SimpleMinHash[32]]
+  override def laws: SimilarityHashLaws[SuperMinHash[512, 16]] =
+    SimilarityHashLaws[SuperMinHash[512, 16]]
 }

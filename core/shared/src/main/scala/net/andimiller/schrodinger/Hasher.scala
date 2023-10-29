@@ -21,6 +21,7 @@ import cats.arrow.Profunctor
 
 import scala.util.hashing.MurmurHash3
 
+@FunctionalInterface
 trait Hasher[I, O] {
   def hash(i: I): O
 }

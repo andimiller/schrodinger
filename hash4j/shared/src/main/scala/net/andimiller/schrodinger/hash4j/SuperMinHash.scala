@@ -25,29 +25,31 @@ import net.andimiller.schrodinger.Hasher
 import net.andimiller.schrodinger.SimilarityHash
 import net.andimiller.schrodinger.hash4j.utils.GenericMinHashMerge
 
-/** Wraps the hash4j MinHash to provide a user friendly interface
-  *
-  * Only a bit width of 64 is supported, due to a bug in hash4j
+/** Wraps the hash4j SuperMinHash to provide a user friendly interface
   * @param value
   * @tparam Components
-  *   number of component hashes inside the MinHash
+  *   number of component hashes inside the SuperMinHash
+  * @tparam Bits
+  *   width of the hashes inside the Minhash
   */
-case class MinHash[Components <: Int: ValueOf](
+case class SuperMinHash[Components <: Int: ValueOf, Bits <: Int: ValueOf](
     value: Array[Byte]
 ) {
   private val hashing: SimilarityHashPolicy =
-    SimilarityHashing.minHash(valueOf[Components], 64)
-  def jaccard(other: MinHash[Components]): Double =
+    SimilarityHashing.superMinHash(valueOf[Components], valueOf[Bits])
+
+  def jaccard(other: SuperMinHash[Components, Bits]): Double =
     hashing.getFractionOfEqualComponents(value, other.value)
 }
 
-object MinHash {
+object SuperMinHash {
 
-  def fromItems[Components <: Int: ValueOf, Input](
+  def fromItems[Components <: Int: ValueOf, Bits <: Int: ValueOf, Input](
       items: NonEmptyLazyList[Input],
       chunkSize: Int = 1024
-  )(implicit hasher: Hasher[Input, Long]): MinHash[Components] = {
-    val hashing = SimilarityHashing.minHash(valueOf[Components], 64)
+  )(implicit hasher: Hasher[Input, Long]): SuperMinHash[Components, Bits] = {
+    val hashing =
+      SimilarityHashing.superMinHash(valueOf[Components], valueOf[Bits])
     val minHasher = hashing.createHasher()
     NonEmptyLazyList
       .fromLazyListUnsafe(
@@ -56,7 +58,7 @@ object MinHash {
             .map(hasher.hash)
             .grouped(chunkSize)
             .map { chunk =>
-              MinHash[Components](
+              SuperMinHash[Components, Bits](
                 minHasher.compute(
                   ElementHashProvider.ofValues(
                     chunk: _*
@@ -67,35 +69,37 @@ object MinHash {
         )
       )
       .reduce
+
   }
 
-  implicit def hash4jMinHashInstance[
-      Components <: Int: ValueOf
-  ]: SimilarityHash[MinHash[Components]] =
-    new SimilarityHash[MinHash[Components]] {
+  implicit def hash4jSuperMinHashInstance[
+      Components <: Int: ValueOf,
+      Bits <: Int: ValueOf
+  ]: SimilarityHash[SuperMinHash[Components, Bits]] =
+    new SimilarityHash[SuperMinHash[Components, Bits]] {
       override def fromHashes(
           hashes: NonEmptyLazyList[Long]
-      ): MinHash[Components] = {
+      ): SuperMinHash[Components, Bits] = {
         implicit val hasher: Hasher[Long, Long] = identity
-        MinHash.fromItems[Components, Long](hashes)
+        fromItems[Components, Bits, Long](hashes)
       }
 
       override def combine(
-          x: MinHash[Components],
-          y: MinHash[Components]
-      ): MinHash[Components] = {
-        MinHash(
+          x: SuperMinHash[Components, Bits],
+          y: SuperMinHash[Components, Bits]
+      ): SuperMinHash[Components, Bits] =
+        SuperMinHash(
           GenericMinHashMerge.merge(
             valueOf[Components],
-            64,
+            valueOf[Bits],
             x.value,
             y.value
           )
         )
-      }
     }
 
-  implicit def hash4jMinHashEquals[Components <: Int]: Eq[MinHash[Components]] =
-    (x: MinHash[Components], y: MinHash[Components]) =>
+  implicit def hash4jSuperMinHashEquals[Components <: Int, Bits <: Int]
+      : Eq[SuperMinHash[Components, Bits]] =
+    (x: SuperMinHash[Components, Bits], y: SuperMinHash[Components, Bits]) =>
       x.value.sameElements(y.value)
 }

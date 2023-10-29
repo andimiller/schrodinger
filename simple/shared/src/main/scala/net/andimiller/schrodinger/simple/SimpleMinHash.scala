@@ -18,8 +18,10 @@ package net.andimiller.schrodinger.simple
 
 import cats.Eq
 import cats.data.NonEmptyLazyList
-import cats.kernel.Semilattice
 import net.andimiller.schrodinger.HasherFactory
+import net.andimiller.schrodinger.SimilarityHash
+
+import scala.util.hashing.MurmurHash3
 
 /** An implementation of MinHash using 32-bit hashes stored in a Vector
   *
@@ -62,14 +64,26 @@ object SimpleMinHash {
   }
 
   // when combining minhashes, we take the minimum hash for each index
-  implicit def semilattice[HashCount <: Int]
-      : Semilattice[SimpleMinHash[HashCount]] =
-    (x: SimpleMinHash[HashCount], y: SimpleMinHash[HashCount]) =>
-      SimpleMinHash(
-        x.hashes.zip(y.hashes).map { case (l, r) =>
+  implicit def instance[HashCount <: Int: ValueOf]
+      : SimilarityHash[SimpleMinHash[HashCount]] =
+    new SimilarityHash[SimpleMinHash[HashCount]] {
+      override def fromHashes(
+          hashes: NonEmptyLazyList[Long]
+      ): SimpleMinHash[HashCount] = {
+        implicit val hasher: HasherFactory[Int, Long, Int] = seed =>
+          long => MurmurHash3.stringHash(long.toString, seed)
+        SimpleMinHash.fromItems[HashCount, Long](hashes)
+      }
+
+      override def combine(
+          x: SimpleMinHash[HashCount],
+          y: SimpleMinHash[HashCount]
+      ): SimpleMinHash[HashCount] = {
+        SimpleMinHash(x.hashes.zip(y.hashes).map { case (l, r) =>
           unsignedIntOrdering.min(l, r)
-        }
-      )
+        })
+      }
+    }
 
   implicit def eq[HashCount <: Int]: Eq[SimpleMinHash[HashCount]] =
     Eq.by(_.hashes)
