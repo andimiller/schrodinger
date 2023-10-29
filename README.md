@@ -6,7 +6,7 @@ This project contains implementations of probabilistic data structures in scala,
 
 It also contains instances and tests for well known JVM probabilistic data structures, so that you can use them easily with cats, and confirm they meet the expected laws.
 
-## Included Data Types
+## Included Data Types (Simple Module)
 
 ### Minhash
 
@@ -24,3 +24,8 @@ Provides:
 * Cardinality
 * Union - BoundedSemilattice
 * (To be added, Intersection and Diff)
+
+## hash4j integration
+
+* `UltraLogLog` - `BoundedSemilattice`
+* `MinHash` - `Semilattice`

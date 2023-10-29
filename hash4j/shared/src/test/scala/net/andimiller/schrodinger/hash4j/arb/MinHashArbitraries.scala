@@ -16,28 +16,30 @@
 
 package net.andimiller.schrodinger.hash4j.arb
 
-import cats.kernel.Monoid
-import com.dynatrace.hash4j.distinctcount.UltraLogLog
+import cats.data.NonEmptyLazyList
 import com.dynatrace.hash4j.hashing.Hashing
-import net.andimiller.schrodinger.hash4j.UltraLogLogInstances
+import net.andimiller.schrodinger.Hasher
+import net.andimiller.schrodinger.hash4j.MinHash
 import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
 
-trait UltraLogLogArbitraries extends UltraLogLogInstances {
+trait MinHashArbitraries {
 
-  implicit def simpleULLArb(implicit
-      p: UltraLogLogP
-  ): Arbitrary[UltraLogLog] = {
-    val wyhash = Hashing.wyhashFinal4()
+  implicit def simpleMinHashArb[
+      Components <: Int: ValueOf,
+      Bits <: Int: ValueOf
+  ]: Arbitrary[MinHash[Components, Bits]] = {
+    implicit val wyhash: Hasher[String, Long] =
+      Hashing.wyhashFinal4().hashCharsToLong(_)
     Arbitrary(
       Gen
         .nonEmptyListOf(Gen.alphaNumStr)
         .map { strings =>
-          val ull = Monoid[UltraLogLog].empty
-          strings.foreach { s =>
-            ull.add(wyhash.hashCharsToLong(s))
-          }
-          ull
+          MinHash.fromItems[Components, Bits, String](
+            NonEmptyLazyList.fromLazyListUnsafe(
+              LazyList.from(strings)
+            )
+          )
         }
     )
   }
