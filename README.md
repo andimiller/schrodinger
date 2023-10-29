@@ -36,4 +36,3 @@ Provides:
 
 * `UltraLogLog` - `BoundedSemilattice`
 * `MinHash` - `SimilarityHash` + `Semilattice` but only if bit size is 64
-* `SuperMinHash` - `SimilarityHash` + `Semilattice` on all bit sizes
