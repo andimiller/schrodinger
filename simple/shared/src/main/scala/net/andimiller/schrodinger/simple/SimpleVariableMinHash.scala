@@ -18,10 +18,15 @@ package net.andimiller.schrodinger.simple
 
 import cats.Eq
 import cats.data.NonEmptyLazyList
+import cats.implicits.toTraverseOps
 import net.andimiller.schrodinger.HashTruncator
 import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.SimilarityHash
+import scodec.Attempt
+import scodec.DecodeResult
 import scodec.bits.BitVector
+import scodec.codecs.bits
+import scodec.interop.cats._
 
 import scala.collection.mutable
 import scala.util.hashing.MurmurHash3
@@ -46,6 +51,16 @@ case class SimpleVariableMinHash[HashCount <: Int, HashWidth <: Int](
 }
 
 object SimpleVariableMinHash {
+
+  def deserialize[HashCount <: Int: ValueOf, HashWidth <: Int: ValueOf](
+      b: BitVector
+  ): Attempt[DecodeResult[SimpleVariableMinHash[HashCount, HashWidth]]] = {
+    Vector
+      .fill(valueOf[HashCount])(bits(valueOf[HashWidth].toLong).asDecoder)
+      .sequence
+      .map(SimpleVariableMinHash[HashCount, HashWidth])
+      .decode(b)
+  }
 
   def fromItems[
       HashCount <: Int: ValueOf,

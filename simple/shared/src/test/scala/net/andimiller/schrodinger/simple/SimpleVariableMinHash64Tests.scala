@@ -22,34 +22,42 @@ import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.HashesArbitrary
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
-import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHashArbitraries
+import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHash64Arbitraries
 import org.scalacheck.Prop.forAll
 
-class SimpleVariableMinHashTests
+import java.nio.ByteBuffer
+
+class SimpleVariableMinHash64Tests
     extends DisciplineSuite
-    with SimilarityHashTests[SimpleVariableMinHash[128, 8]]
-    with SimpleVariableMinHashArbitraries
+    with SimilarityHashTests[SimpleVariableMinHash64[128, 8]]
+    with SimpleVariableMinHash64Arbitraries
     with HashesArbitrary {
 
   checkAll(
-    "SimpleVariableMinHash[128, 8]",
+    "SimpleVariableMinHash64[128, 8]",
     similarityHash
   )
 
   test("Jaccard should give an expected value") {
-    implicit val hasherFactory: HasherFactory[Int, String, Int] =
-      HasherFactory.murmur3
+    implicit val hasherFactory: HasherFactory[Int, String, Long] = {
+      seed => str =>
+        {
+          val upper = HasherFactory.murmur3.create(seed).hash(str)
+          val lower = HasherFactory.murmur3.create(0 - seed).hash(str)
+          ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
+        }
+    }
     val one =
-      SimpleVariableMinHash.fromItems[4096, 16, String, Int](
+      SimpleVariableMinHash64.fromItems[4096, 16, String](
         NonEmptyLazyList("hello", "world")
       )
     val two =
-      SimpleVariableMinHash.fromItems[4096, 16, String, Int](
+      SimpleVariableMinHash64.fromItems[4096, 16, String](
         NonEmptyLazyList("hello")
       )
 
     assertEqualsDouble(
-      SimpleVariableMinHash.jaccard(one, two),
+      SimpleVariableMinHash64.jaccard(one, two),
       0.5,
       delta = 0.05,
       "Expected jaccard to be around 0.5"
@@ -57,14 +65,14 @@ class SimpleVariableMinHashTests
   }
 
   property("Serialized size must be as expected") {
-    forAll { (s: SimpleVariableMinHash[1024, 16]) =>
+    forAll { (s: SimpleVariableMinHash64[1024, 16]) =>
       s.serialize.size == 1024 * 16
     }
   }
 
   property("Codec roundtrip") {
-    forAll { (s: SimpleVariableMinHash[32, 32]) =>
-      SimpleVariableMinHash
+    forAll { (s: SimpleVariableMinHash64[32, 32]) =>
+      SimpleVariableMinHash64
         .deserialize[32, 32](s.serialize)
         .toOption
         .get
@@ -72,6 +80,6 @@ class SimpleVariableMinHashTests
     }
   }
 
-  override def laws: SimilarityHashLaws[SimpleVariableMinHash[128, 8]] =
-    SimilarityHashLaws[SimpleVariableMinHash[128, 8]]
+  override def laws: SimilarityHashLaws[SimpleVariableMinHash64[128, 8]] =
+    SimilarityHashLaws[SimpleVariableMinHash64[128, 8]]
 }
