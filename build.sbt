@@ -62,6 +62,7 @@ lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     name := "schrodinger",
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % "2.9.0",
+      "org.scodec" %%% "scodec-bits" % "1.1.38",
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
       "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
@@ -77,6 +78,7 @@ lazy val simple = crossProject(JVMPlatform, JSPlatform, NativePlatform)
     name := "schrodinger-simple",
     libraryDependencies ++= Seq(
       "org.typelevel" %%% "cats-core" % "2.9.0",
+      "org.scodec" %%% "scodec-bits" % "1.1.38",
       "org.scalameta" %%% "munit" % "1.0.0-M10" % Test,
       "org.typelevel" %%% "cats-laws" % "2.9.0" % Test,
       "org.typelevel" %%% "discipline-munit" % "2.0.0-M3" % Test
