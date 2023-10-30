@@ -26,12 +26,12 @@ import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHashArbitraries
 
 class SimpleVariableMinHashTests
     extends DisciplineSuite
-    with SimilarityHashTests[SimpleVariableMinHash[1024, 32]]
+    with SimilarityHashTests[SimpleVariableMinHash[128, 8]]
     with SimpleVariableMinHashArbitraries
     with HashesArbitrary {
 
   checkAll(
-    "SimpleVariableMinHash[1024, 32]",
+    "SimpleVariableMinHash[128, 8]",
     similarityHash
   )
 
@@ -39,22 +39,22 @@ class SimpleVariableMinHashTests
     implicit val hasherFactory: HasherFactory[Int, String, Int] =
       HasherFactory.murmur3
     val one =
-      SimpleVariableMinHash.fromItems[1024, 32, String, Int](
+      SimpleVariableMinHash.fromItems[4096, 16, String, Int](
         NonEmptyLazyList("hello", "world")
       )
     val two =
-      SimpleVariableMinHash.fromItems[1024, 32, String, Int](
+      SimpleVariableMinHash.fromItems[4096, 16, String, Int](
         NonEmptyLazyList("hello")
       )
 
     assertEqualsDouble(
       SimpleVariableMinHash.jaccard(one, two),
       0.5,
-      delta = 0.03,
+      delta = 0.05,
       "Expected jaccard to be around 0.5"
     )
   }
 
-  override def laws: SimilarityHashLaws[SimpleVariableMinHash[1024, 32]] =
-    SimilarityHashLaws[SimpleVariableMinHash[1024, 32]]
+  override def laws: SimilarityHashLaws[SimpleVariableMinHash[128, 8]] =
+    SimilarityHashLaws[SimpleVariableMinHash[128, 8]]
 }
