@@ -21,6 +21,8 @@ import cats.kernel.laws.IsEq
 import cats.kernel.laws.IsEqArrow
 import cats.kernel.laws.SemilatticeLaws
 
+import scala.util.Random
+
 trait SimilarityHashLaws[T] extends SemilatticeLaws[T] {
   implicit def S: SimilarityHash[T]
 
@@ -29,6 +31,12 @@ trait SimilarityHashLaws[T] extends SemilatticeLaws[T] {
       b: NonEmptyLazyList[Long]
   ): IsEq[T] =
     S.fromHashes(a ++ b) <-> S.combine(S.fromHashes(a), S.fromHashes(b))
+
+  def fromHashesCommutative(
+      a: NonEmptyLazyList[Long],
+      b: Long
+  ): IsEq[T] =
+    S.fromHashes(a) <-> S.fromHashes(NonEmptyLazyList.fromLazyListUnsafe(new Random(b).shuffle(a.toLazyList)))
 }
 
 object SimilarityHashLaws {

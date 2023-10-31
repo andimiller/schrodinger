@@ -37,8 +37,11 @@ trait SimilarityHashTests[A] extends SemilatticeTests[A] {
       val bases: Seq[(String, RuleSet)] = Nil
       val parents: Seq[RuleSet]         = Seq(semilattice)
       val props: Seq[(String, Prop)]    = Seq(
-        "distributive" -> forAll { (a: NonEmptyLazyList[Long], b: NonEmptyLazyList[Long]) =>
+        "distributive"        -> forAll { (a: NonEmptyLazyList[Long], b: NonEmptyLazyList[Long]) =>
           laws.distributive(a, b)
+        },
+        "fromHashCommutative" -> forAll { (a: NonEmptyLazyList[Long], b: Long) =>
+          laws.fromHashesCommutative(a, b)
         }
       )
     }
