@@ -103,9 +103,7 @@ object SimplePRNGMinHash {
   }
 
   // when combining minhashes, we take the minimum hash for each index
-  implicit def instance[HashCount <: Int: ValueOf, HashWidth <: Int: ValueOf](implicit
-      t: HashTruncator[Int, HashWidth]
-  ): SimilarityHash[SimplePRNGMinHash[HashCount, HashWidth]] =
+  implicit def instance[HashCount <: Int: ValueOf, HashWidth <: Int: ValueOf]: SimilarityHash[SimplePRNGMinHash[HashCount, HashWidth]] =
     new SimilarityHash[SimplePRNGMinHash[HashCount, HashWidth]] {
       override def fromHashes(
           hashes: NonEmptyLazyList[Long]
