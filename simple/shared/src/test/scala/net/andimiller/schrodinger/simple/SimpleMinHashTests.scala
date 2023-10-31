@@ -38,9 +38,9 @@ class SimpleMinHashTests
   test("Jaccard should give an expected value") {
     implicit val hasherFactory: HasherFactory[Int, String, Int] =
       HasherFactory.murmur3
-    val one =
+    val one                                                     =
       SimpleMinHash.fromItems[1024, String](NonEmptyLazyList("hello", "world"))
-    val two =
+    val two                                                     =
       SimpleMinHash.fromItems[1024, String](NonEmptyLazyList("hello"))
 
     assertEqualsDouble(

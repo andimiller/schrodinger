@@ -33,12 +33,10 @@ import scala.collection.mutable
 
 /** An implementation of MinHash using shifted long hashes stored in a Vector
   *
-  * When serializing we only serialize the bits that matter, so the serialized
-  * form is smaller
+  * When serializing we only serialize the bits that matter, so the serialized form is smaller
   *
-  * This exists as an example of how to implement MinHash, written in the
-  * clearest way possible to demonstrate the algorithm, this may lead to bad
-  * performance.
+  * This exists as an example of how to implement MinHash, written in the clearest way possible to demonstrate the algorithm, this may lead
+  * to bad performance.
   *
   * @param hashes
   *   the hashes stored
@@ -72,9 +70,8 @@ object SimpleVariableMinHash64 {
       .decode(b)
   }
 
-  val unorderedLong: Ordering[Long] = (x: Long, y: Long) =>
-    java.lang.Long.compareUnsigned(x, y)
-  val MAX_UNORDERED_LONG: Long = -1L
+  val unorderedLong: Ordering[Long] = (x: Long, y: Long) => java.lang.Long.compareUnsigned(x, y)
+  val MAX_UNORDERED_LONG: Long      = -1L
 
   def fromItems[
       HashCount <: Int: ValueOf,
@@ -143,10 +140,8 @@ object SimpleVariableMinHash64 {
       }
     }
 
-  implicit def eq[HashCount <: Int, HashWidth <: Int]
-      : Eq[SimpleVariableMinHash64[HashCount, HashWidth]] = Eq.instance {
-    (a, b) =>
-      a.hashes == b.hashes
+  implicit def eq[HashCount <: Int, HashWidth <: Int]: Eq[SimpleVariableMinHash64[HashCount, HashWidth]] = Eq.instance { (a, b) =>
+    a.hashes == b.hashes
   }
 
 }

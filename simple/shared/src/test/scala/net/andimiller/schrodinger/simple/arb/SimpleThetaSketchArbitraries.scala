@@ -24,16 +24,13 @@ import org.scalacheck.Gen
 
 trait SimpleThetaSketchArbitraries {
 
-  implicit def simpleThetaSketchArbitraries[LgK <: Int: ValueOf]
-      : Arbitrary[SimpleThetaSketch[LgK]] = {
+  implicit def simpleThetaSketchArbitraries[LgK <: Int: ValueOf]: Arbitrary[SimpleThetaSketch[LgK]] = {
     implicit val hasher: Hasher[String, Int] =
       HasherFactory.murmur3.create(0)
     Arbitrary(
       Gen
         .listOf(Gen.alphaNumStr)
-        .map(list =>
-          SimpleThetaSketch.fromItems[LgK, String](LazyList.from(list))
-        )
+        .map(list => SimpleThetaSketch.fromItems[LgK, String](LazyList.from(list)))
     )
   }
 

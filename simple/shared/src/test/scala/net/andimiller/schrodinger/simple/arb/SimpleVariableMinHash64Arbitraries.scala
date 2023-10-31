@@ -30,13 +30,12 @@ trait SimpleVariableMinHash64Arbitraries {
       HashCount <: Int: ValueOf,
       HashWidth <: Int: ValueOf
   ]: Arbitrary[SimpleVariableMinHash64[HashCount, HashWidth]] = {
-    implicit val hasherFactory: HasherFactory[Int, String, Long] = {
-      seed => str =>
-        {
-          val upper = HasherFactory.murmur3.create(seed).hash(str)
-          val lower = HasherFactory.murmur3.create(0 - seed).hash(str)
-          ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
-        }
+    implicit val hasherFactory: HasherFactory[Int, String, Long] = { seed => str =>
+      {
+        val upper = HasherFactory.murmur3.create(seed).hash(str)
+        val lower = HasherFactory.murmur3.create(0 - seed).hash(str)
+        ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
+      }
     }
     Arbitrary(
       Gen

@@ -22,10 +22,7 @@ import com.dynatrace.hash4j.distinctcount.UltraLogLog
 import munit.DisciplineSuite
 import net.andimiller.schrodinger.hash4j.arb.UltraLogLogArbitraries
 
-class UltraLogLogTests
-    extends DisciplineSuite
-    with BoundedSemilatticeTests[UltraLogLog]
-    with UltraLogLogArbitraries {
+class UltraLogLogTests extends DisciplineSuite with BoundedSemilatticeTests[UltraLogLog] with UltraLogLogArbitraries {
 
   implicit val p: UltraLogLogP = UltraLogLogP(12)
 

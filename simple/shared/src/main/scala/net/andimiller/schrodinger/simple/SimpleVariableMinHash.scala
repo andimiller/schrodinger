@@ -33,9 +33,8 @@ import scala.util.hashing.MurmurHash3
 
 /** An implementation of MinHash using truncated hashes stored in a Vector
   *
-  * This exists as an example of how to implement MinHash, written in the
-  * clearest way possible to demonstrate the algorithm, this may lead to bad
-  * performance.
+  * This exists as an example of how to implement MinHash, written in the clearest way possible to demonstrate the algorithm, this may lead
+  * to bad performance.
   *
   * @param hashes
   *   the hashes stored
@@ -109,15 +108,14 @@ object SimpleVariableMinHash {
   }
 
   // when combining minhashes, we take the minimum hash for each index
-  implicit def instance[HashCount <: Int: ValueOf, HashWidth <: Int: ValueOf](
-      implicit t: HashTruncator[Int, HashWidth]
+  implicit def instance[HashCount <: Int: ValueOf, HashWidth <: Int: ValueOf](implicit
+      t: HashTruncator[Int, HashWidth]
   ): SimilarityHash[SimpleVariableMinHash[HashCount, HashWidth]] =
     new SimilarityHash[SimpleVariableMinHash[HashCount, HashWidth]] {
       override def fromHashes(
           hashes: NonEmptyLazyList[Long]
       ): SimpleVariableMinHash[HashCount, HashWidth] = {
-        implicit val hasher: HasherFactory[Int, Long, Int] = seed =>
-          long => MurmurHash3.stringHash(long.toString, seed)
+        implicit val hasher: HasherFactory[Int, Long, Int] = seed => long => MurmurHash3.stringHash(long.toString, seed)
         SimpleVariableMinHash.fromItems[HashCount, HashWidth, Long, Int](hashes)
       }
 
@@ -131,10 +129,8 @@ object SimpleVariableMinHash {
       }
     }
 
-  implicit def eq[HashCount <: Int, HashWidth <: Int]
-      : Eq[SimpleVariableMinHash[HashCount, HashWidth]] = Eq.instance {
-    (a, b) =>
-      a.hashes == b.hashes
+  implicit def eq[HashCount <: Int, HashWidth <: Int]: Eq[SimpleVariableMinHash[HashCount, HashWidth]] = Eq.instance { (a, b) =>
+    a.hashes == b.hashes
   }
 
 }

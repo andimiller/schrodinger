@@ -23,11 +23,9 @@ import net.andimiller.schrodinger.Hasher
 
 import scala.collection.SortedSet
 
-/** This is a simple theta sketch intended for use as a learning material, it
-  * won't perform as well as optimised ones
+/** This is a simple theta sketch intended for use as a learning material, it won't perform as well as optimised ones
   *
-  * A theta sketch is a sample of the lowest N hashes we've seen, we configure
-  * this with the LgK type parameter
+  * A theta sketch is a sample of the lowest N hashes we've seen, we configure this with the LgK type parameter
   *
   * @param hashes
   *   sample of hashes present in this sketch
@@ -68,8 +66,7 @@ object SimpleThetaSketch {
     )
   }
 
-  implicit def boundedSemilattice[LgK <: Int: ValueOf]
-      : BoundedSemilattice[SimpleThetaSketch[LgK]] =
+  implicit def boundedSemilattice[LgK <: Int: ValueOf]: BoundedSemilattice[SimpleThetaSketch[LgK]] =
     new BoundedSemilattice[SimpleThetaSketch[LgK]] {
 
       override def empty: SimpleThetaSketch[LgK] = SimpleThetaSketch(

@@ -25,10 +25,7 @@ import net.andimiller.schrodinger.Hasher
 import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.simple.arb.SimpleThetaSketchArbitraries
 
-class SimpleThetaSketchTests
-    extends DisciplineSuite
-    with BoundedSemilatticeTests[SimpleThetaSketch[4]]
-    with SimpleThetaSketchArbitraries {
+class SimpleThetaSketchTests extends DisciplineSuite with BoundedSemilatticeTests[SimpleThetaSketch[4]] with SimpleThetaSketchArbitraries {
 
   checkAll(
     "SimpleThetaSketch[4]",
@@ -38,10 +35,10 @@ class SimpleThetaSketchTests
   test("Cardinality should give an expected value when in exact mode") {
     implicit val hasher: Hasher[String, Int] =
       HasherFactory.murmur3.create(0)
-    val one = SimpleThetaSketch.fromItems[12, String](
+    val one                                  = SimpleThetaSketch.fromItems[12, String](
       LazyList.range(0, 1000).map(_.toString)
     )
-    val two = SimpleThetaSketch.fromItems[12, String](
+    val two                                  = SimpleThetaSketch.fromItems[12, String](
       LazyList.range(500, 1500).map(_.toString)
     )
 
@@ -56,10 +53,10 @@ class SimpleThetaSketchTests
   test("Cardinality should give an expected value when in sampled mode") {
     implicit val hasher: Hasher[String, Int] =
       HasherFactory.murmur3.create(0)
-    val one = SimpleThetaSketch.fromItems[8, String](
+    val one                                  = SimpleThetaSketch.fromItems[8, String](
       LazyList.range(0, 1000).map(_.toString)
     )
-    val two = SimpleThetaSketch.fromItems[8, String](
+    val two                                  = SimpleThetaSketch.fromItems[8, String](
       LazyList.range(500, 1500).map(_.toString)
     )
 

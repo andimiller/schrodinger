@@ -25,11 +25,7 @@ import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.hash4j.arb.MinHashArbitraries
 
-class MinHashTests
-    extends DisciplineSuite
-    with SimilarityHashTests[MinHash[512]]
-    with MinHashArbitraries
-    with HashesArbitrary {
+class MinHashTests extends DisciplineSuite with SimilarityHashTests[MinHash[512]] with MinHashArbitraries with HashesArbitrary {
 
   checkAll(
     "MinHash[512]",
@@ -39,9 +35,9 @@ class MinHashTests
   test("Should do some vaguely sensible jaccard calculations") {
     implicit val wyhash: Hasher[String, Long] =
       Hashing.wyhashFinal4().hashCharsToLong(_)
-    val one =
+    val one                                   =
       MinHash.fromItems[512, String](NonEmptyLazyList("hello", "world"))
-    val two = MinHash.fromItems[512, String](NonEmptyLazyList("hello"))
+    val two                                   = MinHash.fromItems[512, String](NonEmptyLazyList("hello"))
 
     assertEqualsDouble(
       one jaccard two,

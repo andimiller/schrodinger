@@ -39,11 +39,11 @@ class SimpleVariableMinHashTests
   test("Jaccard should give an expected value") {
     implicit val hasherFactory: HasherFactory[Int, String, Int] =
       HasherFactory.murmur3
-    val one =
+    val one                                                     =
       SimpleVariableMinHash.fromItems[4096, 16, String, Int](
         NonEmptyLazyList("hello", "world")
       )
-    val two =
+    val two                                                     =
       SimpleVariableMinHash.fromItems[4096, 16, String, Int](
         NonEmptyLazyList("hello")
       )

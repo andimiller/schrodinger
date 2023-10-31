@@ -20,9 +20,8 @@ package net.andimiller.schrodinger
 trait HashShifter[Input, Width <: Int] {
   def run(i: Input): Input
 }
-object HashShifter {
-  implicit def hashShifter64[Width <: Int: ValueOf]
-      : HashShifter[Long, Width] = {
+object HashShifter                     {
+  implicit def hashShifter64[Width <: Int: ValueOf]: HashShifter[Long, Width] = {
     require(
       valueOf[Width] <= 64,
       s"attempted to truncate a hash of 64 bits down to ${valueOf[Width]} bits"

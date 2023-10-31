@@ -39,19 +39,18 @@ class SimpleVariableMinHash64Tests
   )
 
   test("Jaccard should give an expected value") {
-    implicit val hasherFactory: HasherFactory[Int, String, Long] = {
-      seed => str =>
-        {
-          val upper = HasherFactory.murmur3.create(seed).hash(str)
-          val lower = HasherFactory.murmur3.create(0 - seed).hash(str)
-          ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
-        }
+    implicit val hasherFactory: HasherFactory[Int, String, Long] = { seed => str =>
+      {
+        val upper = HasherFactory.murmur3.create(seed).hash(str)
+        val lower = HasherFactory.murmur3.create(0 - seed).hash(str)
+        ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
+      }
     }
-    val one =
+    val one                                                      =
       SimpleVariableMinHash64.fromItems[4096, 16, String](
         NonEmptyLazyList("hello", "world")
       )
-    val two =
+    val two                                                      =
       SimpleVariableMinHash64.fromItems[4096, 16, String](
         NonEmptyLazyList("hello")
       )

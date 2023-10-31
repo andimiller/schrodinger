@@ -24,8 +24,7 @@ import org.scalacheck.Gen
 
 trait SimpleMinHashArbitraries {
 
-  implicit def simpleMinHashArb[HashCount <: Int: ValueOf]
-      : Arbitrary[SimpleMinHash[HashCount]] = {
+  implicit def simpleMinHashArb[HashCount <: Int: ValueOf]: Arbitrary[SimpleMinHash[HashCount]] = {
     implicit val hasherFactory: HasherFactory[Int, String, Int] =
       HasherFactory.murmur3
     Arbitrary(

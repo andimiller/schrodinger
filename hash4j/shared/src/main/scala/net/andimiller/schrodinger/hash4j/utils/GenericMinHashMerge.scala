@@ -29,7 +29,7 @@ object GenericMinHashMerge {
       left: Array[Byte],
       right: Array[Byte]
   ): Array[Byte] = {
-    val pah = PackedArray.getHandler(bits)
+    val pah    = PackedArray.getHandler(bits)
     val merged = pah.create(components)
 
     (0 until components).foreach { idx =>

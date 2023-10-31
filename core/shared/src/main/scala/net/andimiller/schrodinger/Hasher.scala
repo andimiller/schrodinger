@@ -32,13 +32,13 @@ object Hasher {
   type Hasher64[I] = Hasher[I, Long]
 
   // type class instances
-  implicit val profunctor: Profunctor[Hasher] = new Profunctor[Hasher] {
+  implicit val profunctor: Profunctor[Hasher]                = new Profunctor[Hasher] {
     override def dimap[A, B, C, D](fab: Hasher[A, B])(f: C => A)(
         g: B => D
     ): Hasher[C, D] =
       c => g(fab.hash(f(c)))
   }
-  implicit def functor[I]: Functor[Hasher[I, *]] = new Functor[Hasher[I, *]] {
+  implicit def functor[I]: Functor[Hasher[I, *]]             = new Functor[Hasher[I, *]] {
     override def map[A, B](fa: Hasher[I, A])(f: A => B): Hasher[I, B] =
       i => f(fa.hash(i))
   }

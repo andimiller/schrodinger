@@ -25,9 +25,8 @@ import scala.util.hashing.MurmurHash3
 
 /** An implementation of MinHash using 32-bit hashes stored in a Vector
   *
-  * This exists as an example of how to implement MinHash, written in the
-  * clearest way possible to demonstrate the algorithm, this may lead to bad
-  * performance.
+  * This exists as an example of how to implement MinHash, written in the clearest way possible to demonstrate the algorithm, this may lead
+  * to bad performance.
   *
   * @param hashes
   *   the hashes stored
@@ -59,19 +58,17 @@ object SimpleMinHash {
   }
 
   // semigroup we use below
-  private val unsignedIntOrdering: Ordering[Int] = Ordering.fromLessThan {
-    case (a, b) => Integer.compareUnsigned(a, b) < 0
+  private val unsignedIntOrdering: Ordering[Int] = Ordering.fromLessThan { case (a, b) =>
+    Integer.compareUnsigned(a, b) < 0
   }
 
   // when combining minhashes, we take the minimum hash for each index
-  implicit def instance[HashCount <: Int: ValueOf]
-      : SimilarityHash[SimpleMinHash[HashCount]] =
+  implicit def instance[HashCount <: Int: ValueOf]: SimilarityHash[SimpleMinHash[HashCount]] =
     new SimilarityHash[SimpleMinHash[HashCount]] {
       override def fromHashes(
           hashes: NonEmptyLazyList[Long]
       ): SimpleMinHash[HashCount] = {
-        implicit val hasher: HasherFactory[Int, Long, Int] = seed =>
-          long => MurmurHash3.stringHash(long.toString, seed)
+        implicit val hasher: HasherFactory[Int, Long, Int] = seed => long => MurmurHash3.stringHash(long.toString, seed)
         SimpleMinHash.fromItems[HashCount, Long](hashes)
       }
 

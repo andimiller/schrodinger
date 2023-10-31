@@ -33,13 +33,12 @@ trait SimilarityHashTests[A] extends SemilatticeTests[A] {
       eqA: Eq[A]
   ): RuleSet =
     new RuleSet {
-      val name: String = "similarityHash"
+      val name: String                  = "similarityHash"
       val bases: Seq[(String, RuleSet)] = Nil
-      val parents: Seq[RuleSet] = Seq(semilattice)
-      val props: Seq[(String, Prop)] = Seq(
-        "distributive" -> forAll {
-          (a: NonEmptyLazyList[Long], b: NonEmptyLazyList[Long]) =>
-            laws.distributive(a, b)
+      val parents: Seq[RuleSet]         = Seq(semilattice)
+      val props: Seq[(String, Prop)]    = Seq(
+        "distributive" -> forAll { (a: NonEmptyLazyList[Long], b: NonEmptyLazyList[Long]) =>
+          laws.distributive(a, b)
         }
       )
     }

@@ -22,17 +22,15 @@ import scodec.bits.BitVector
 trait HashTruncator[Input, Width <: Int] {
   def run(i: Input): BitVector
 }
-object HashTruncator {
-  implicit def hashTruncator64[Width <: Int: ValueOf]
-      : HashTruncator[Long, Width] = {
+object HashTruncator                     {
+  implicit def hashTruncator64[Width <: Int: ValueOf]: HashTruncator[Long, Width] = {
     require(
       valueOf[Width] <= 64,
       s"attempted to truncate a hash of 64 bits down to ${valueOf[Width]} bits"
     )
     l => BitVector.fromLong(l).take(valueOf[Width].toLong)
   }
-  implicit def hashTruncator32[Width <: Int: ValueOf]
-      : HashTruncator[Int, Width] = {
+  implicit def hashTruncator32[Width <: Int: ValueOf]: HashTruncator[Int, Width]  = {
     require(
       valueOf[Width] <= 32,
       s"attempted to truncate a hash of 32 bits down to ${valueOf[Width]} bits"

@@ -27,7 +27,7 @@ trait UltraLogLogInstances {
   implicit def ullBoundedSemilattice(implicit
       p: UltraLogLogP
   ): BoundedSemilattice[UltraLogLog] = new BoundedSemilattice[UltraLogLog] {
-    override def empty: UltraLogLog = UltraLogLog.create(p.value)
+    override def empty: UltraLogLog                                   = UltraLogLog.create(p.value)
     override def combine(x: UltraLogLog, y: UltraLogLog): UltraLogLog = {
       val merged = UltraLogLog.create(p.value)
       merged.add(x)

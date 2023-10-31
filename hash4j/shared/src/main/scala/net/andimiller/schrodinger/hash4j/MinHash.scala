@@ -35,7 +35,7 @@ import net.andimiller.schrodinger.hash4j.utils.GenericMinHashMerge
 case class MinHash[Components <: Int: ValueOf](
     value: Array[Byte]
 ) {
-  private val hashing: SimilarityHashPolicy =
+  private val hashing: SimilarityHashPolicy       =
     SimilarityHashing.minHash(valueOf[Components], 64)
   def jaccard(other: MinHash[Components]): Double =
     hashing.getFractionOfEqualComponents(value, other.value)
@@ -47,7 +47,7 @@ object MinHash {
       items: NonEmptyLazyList[Input],
       chunkSize: Int = 1024
   )(implicit hasher: Hasher[Input, Long]): MinHash[Components] = {
-    val hashing = SimilarityHashing.minHash(valueOf[Components], 64)
+    val hashing   = SimilarityHashing.minHash(valueOf[Components], 64)
     val minHasher = hashing.createHasher()
     NonEmptyLazyList
       .fromLazyListUnsafe(
@@ -96,6 +96,5 @@ object MinHash {
     }
 
   implicit def hash4jMinHashEquals[Components <: Int]: Eq[MinHash[Components]] =
-    (x: MinHash[Components], y: MinHash[Components]) =>
-      x.value.sameElements(y.value)
+    (x: MinHash[Components], y: MinHash[Components]) => x.value.sameElements(y.value)
 }
