@@ -17,9 +17,12 @@
 package net.andimiller.schrodinger
 
 import scala.util.hashing.MurmurHash3
+import cats.implicits.*
 
-trait HasherFactory[Seed, I, O] {
+trait HasherFactory[Seed, I, O] { hf =>
   def create(seed: Seed): Hasher[I, O]
+
+  def map[O2](f: O => O2): HasherFactory[Seed, I, O2] = (seed: Seed) => hf.create(seed).map(f)
 }
 
 object HasherFactory {
