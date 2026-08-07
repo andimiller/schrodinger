@@ -18,7 +18,7 @@ package net.andimiller.schrodinger
 
 import com.dynatrace.hash4j.hashing.Hashing
 
-package object hash4j extends UltraLogLogInstances {
+package object hash4j extends UltraLogLogInstances with HyperLogLogInstances {
 
   val wyhashFinal4Factory: HasherFactory[Long, String, Long] = seed => (input => Hashing.wyhashFinal4(seed).hashCharsToLong(input))
 
