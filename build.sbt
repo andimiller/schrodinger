@@ -19,8 +19,8 @@ ThisBuild / tlSonatypeUseLegacyHost := false
 // publish website from this branch
 ThisBuild / tlSitePublishBranch := None // don't publish yet
 
-val Scala213 = "2.13.12"
-ThisBuild / crossScalaVersions                  := Seq(Scala213, "3.3.1")
+val Scala213 = "2.13.16"
+ThisBuild / crossScalaVersions                  := Seq(Scala213, "3.3.8")
 ThisBuild / scalaVersion                        := Scala213 // the default Scala
 ThisBuild / githubWorkflowPublishTargetBranches := Seq()    // CI doesn't need to publish, I'll do that myself for now
 ThisBuild / githubWorkflowJavaVersions          := List(JavaSpec.temurin("11"))
@@ -51,8 +51,15 @@ ${scala.Console.YELLOW}Scala ${scalaVersion.value}${scala.Console.RESET}
   )
 
 lazy val commonSettings = Seq(
-  logo := ""
+  logo := "",
+  // sbt-typelevel 0.6.1 hardcodes kind-projector 0.13.2, which has no build for 2.13.16+
+  libraryDependencies := libraryDependencies.value.map { d =>
+    if (d.name == "kind-projector") d.withRevision("0.13.3") else d
+  }
 )
+
+// sbt-typelevel-scalafix 0.6.1 pins semanticdb 4.8.10, which has no build for 2.13.16+
+ThisBuild / semanticdbVersion := "4.14.0"
 
 lazy val core = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .crossType(CrossType.Full)

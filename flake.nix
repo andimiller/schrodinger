@@ -17,7 +17,7 @@
           imports = [ typelevel-nix.typelevelShell ];
           name = "schrodinger";
           typelevelShell = {
-            jdk.package = pkgs.jdk8;
+            jdk.package = pkgs.jdk17;
             native.enable = true;
             nodejs.enable = true;
           };
