@@ -40,7 +40,7 @@ object SimpleMinHash {
   def fromItems[HashCount <: Int: ValueOf, Input](
       items: NonEmptyLazyList[Input]
   )(implicit hasherFactory: HasherFactory[Int, Input, Int]) = {
-    val hashers = (0 to valueOf[HashCount]).toVector
+    val hashers = (0 until valueOf[HashCount]).toVector
       .map(hasherFactory.create)
 
     items.map { item =>

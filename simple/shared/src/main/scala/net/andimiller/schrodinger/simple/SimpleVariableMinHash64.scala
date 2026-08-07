@@ -121,8 +121,11 @@ object SimpleVariableMinHash64 {
         implicit val hasher: HasherFactory[Int, Long, Long] = seed =>
           long => {
             val upper = HasherFactory.murmur3.create(seed).hash(long.toString)
-            val lower =
-              HasherFactory.murmur3.create(0 - seed).hash(long.toString)
+            // xor with the golden-ratio constant derives a second seed that isn't
+            // degenerate at seed 0 and isn't a negated copy of the first (unlike -seed)
+            val lower = HasherFactory.murmur3
+              .create(seed ^ 0x9e3779b9)
+              .hash(long.toString)
             ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
           }
         SimpleVariableMinHash64.fromItems[HashCount, HashWidth, Long](
@@ -143,5 +146,4 @@ object SimpleVariableMinHash64 {
   implicit def eq[HashCount <: Int, HashWidth <: Int]: Eq[SimpleVariableMinHash64[HashCount, HashWidth]] = Eq.instance { (a, b) =>
     a.hashes == b.hashes
   }
-
 }

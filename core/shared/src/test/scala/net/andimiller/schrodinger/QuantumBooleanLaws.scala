@@ -22,11 +22,11 @@ class QuantumBooleanLaws extends DisciplineSuite with QuantumBooleanArbitrary wi
       "or True"   -> forAllSafe { (x: A) => (x | A.one) == A.one },
       "or False"  -> forAllSafe { (x: A) => (x | A.zero) == x },
       // use == not ===: spire's EqSyntax in a 2-arg lambda crashes dotty 3.x under zinc (BadTyperStateAssertion)
-      "xor"  -> forAllSafe { (a: A, b: A) => (a ^ b) == ((a & ~b) | (~a & b)) },
-      "nxor" -> forAllSafe { (a: A, b: A) => (a.nxor(b)) == ((a | ~b) & (~a | b)) },
-      "imp"  -> forAllSafe { (a: A, b: A) => (a.imp(b)) == (~a | b) },
-      "nand" -> forAllSafe { (a: A, b: A) => (a.nand(b)) == ~(a & b) },
-      "nor"  -> forAllSafe { (a: A, b: A) => (a.nor(b)) == ~(a | b) }
+      "xor"       -> forAllSafe { (a: A, b: A) => (a ^ b) == ((a & ~b) | (~a & b)) },
+      "nxor"      -> forAllSafe { (a: A, b: A) => (a.nxor(b)) == ((a | ~b) & (~a | b)) },
+      "imp"       -> forAllSafe { (a: A, b: A) => (a.imp(b)) == (~a | b) },
+      "nand"      -> forAllSafe { (a: A, b: A) => (a.nand(b)) == ~(a & b) },
+      "nor"       -> forAllSafe { (a: A, b: A) => (a.nor(b)) == ~(a | b) }
     )
 
   checkAll("QuantumBoolean", qbool[QuantumBoolean])

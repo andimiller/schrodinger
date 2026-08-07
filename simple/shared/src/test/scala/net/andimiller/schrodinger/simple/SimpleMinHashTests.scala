@@ -51,6 +51,14 @@ class SimpleMinHashTests
     )
   }
 
+  test("Jaccard of a sketch with itself should be exactly 1.0") {
+    implicit val hasherFactory: HasherFactory[Int, String, Int] =
+      HasherFactory.murmur3
+    val one                                                     = SimpleMinHash.fromItems[32, String](NonEmptyLazyList("hello", "world"))
+
+    assertEquals(SimpleMinHash.jaccard(one, one), 1.0)
+  }
+
   override def laws: SimilarityHashLaws[SimpleMinHash[32]] =
     SimilarityHashLaws[SimpleMinHash[32]]
 }

@@ -23,6 +23,7 @@ import net.andimiller.schrodinger.HashesArbitrary
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHash64Arbitraries
+import net.andimiller.schrodinger.SimilarityHash
 import org.scalacheck.Prop.forAll
 
 import java.nio.ByteBuffer
@@ -61,6 +62,14 @@ class SimpleVariableMinHash64Tests
       delta = 0.05,
       "Expected jaccard to be around 0.5"
     )
+  }
+
+  test("seed zero should not produce degenerate 64-bit hashes") {
+    val sketch    = implicitly[SimilarityHash[SimpleVariableMinHash64[1, 64]]]
+      .fromHashes(NonEmptyLazyList(42L))
+    val composite = sketch.hashes.head
+
+    assert((composite >>> 32) != (composite & 0xffffffffL))
   }
 
   property("Serialized size must be as expected") {

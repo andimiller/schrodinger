@@ -25,6 +25,8 @@ import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHashArbitraries
 import org.scalacheck.Prop.forAll
 
+import java.nio.ByteBuffer
+
 class SimpleVariableMinHashTests
     extends DisciplineSuite
     with SimilarityHashTests[SimpleVariableMinHash[128, 8]]
@@ -54,6 +56,23 @@ class SimpleVariableMinHashTests
       delta = 0.05,
       "Expected jaccard to be around 0.5"
     )
+  }
+
+  test("fromItems should accept a 64-bit hasher with a HashWidth above 32") {
+    implicit val hasherFactory: HasherFactory[Int, String, Long] = { seed => str =>
+      {
+        val upper = HasherFactory.murmur3.create(seed).hash(str)
+        val lower = HasherFactory.murmur3.create(seed ^ 0x9e3779b9).hash(str)
+        ByteBuffer.allocate(8).putInt(upper).putInt(lower).getLong(0)
+      }
+    }
+
+    val result =
+      SimpleVariableMinHash.fromItems[16, 48, String, Long](
+        NonEmptyLazyList("hello", "world")
+      )
+
+    assertEquals(result.hashes.size, 16)
   }
 
   property("Serialized size must be as expected") {

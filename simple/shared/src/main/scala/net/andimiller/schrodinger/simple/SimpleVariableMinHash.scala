@@ -72,10 +72,6 @@ object SimpleVariableMinHash {
       hasherFactory: HasherFactory[Int, Input, Hash],
       truncator: HashTruncator[Hash, HashWidth]
   ): SimpleVariableMinHash[HashCount, HashWidth] = {
-    require(
-      valueOf[HashWidth] <= 32,
-      "HashWidth must be 32 or less when used with a 32-bit hasher"
-    )
     val hashers = (0 until valueOf[HashCount]).toVector
       .map(hasherFactory.create)
 

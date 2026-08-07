@@ -24,4 +24,17 @@ class SimpleBloomFilterTests extends munit.FunSuite {
     )
   }
 
+  test("the backing set should stay bounded by Bits") {
+    implicit val hasher: HasherFactory[Int, String, Int] =
+      HasherFactory.murmur3
+
+    val bloom = SimpleBloomFilter
+      .empty[256, String]
+      .add("hello")
+      .add("world")
+
+    assert(bloom.set.size <= 256)
+    assert(bloom.set.max < 256)
+  }
+
 }

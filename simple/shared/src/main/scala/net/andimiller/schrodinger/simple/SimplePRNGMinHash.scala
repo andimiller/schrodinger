@@ -80,7 +80,9 @@ object SimplePRNGMinHash {
       items
         .foldLeft(empty) { case (output, item) =>
           val hash = hasher.hash(item)
-          val prng = new Random(hash)
+          // Random only uses the low 48 bits of its seed; folding the top half in
+          // spreads the whole hash across it so high-bit differences aren't lost
+          val prng = new Random(hash ^ (hash >>> 32))
           output.indices.foreach { idx =>
             val truncated = truncator.run(prng.nextLong())
             if (truncated < output(idx)) {
@@ -125,5 +127,4 @@ object SimplePRNGMinHash {
   implicit def eq[HashCount <: Int, HashWidth <: Int]: Eq[SimplePRNGMinHash[HashCount, HashWidth]] = Eq.instance { (a, b) =>
     a.hashes == b.hashes
   }
-
 }

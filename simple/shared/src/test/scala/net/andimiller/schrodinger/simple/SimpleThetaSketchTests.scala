@@ -18,6 +18,7 @@ package net.andimiller.schrodinger.simple
 
 import cats.data.NonEmptyList
 import cats.implicits.*
+import cats.kernel.BoundedSemilattice
 import cats.kernel.laws.BoundedSemilatticeLaws
 import cats.kernel.laws.discipline.BoundedSemilatticeTests
 import munit.DisciplineSuite
@@ -67,6 +68,10 @@ class SimpleThetaSketchTests extends DisciplineSuite with BoundedSemilatticeTest
       1500,
       100
     )
+  }
+
+  test("theta of an empty sketch should be 1.0, not throw") {
+    assertEquals(BoundedSemilattice[SimpleThetaSketch[4]].empty.theta, 1.0)
   }
 
   override def laws: BoundedSemilatticeLaws[SimpleThetaSketch[4]] =

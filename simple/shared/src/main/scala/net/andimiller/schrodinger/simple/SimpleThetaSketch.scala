@@ -35,7 +35,8 @@ import scala.collection.SortedSet
 case class SimpleThetaSketch[LgK <: Int: ValueOf](hashes: SortedSet[Int]) {
   lazy val maxItems: Int = Math.pow(2, valueOf[LgK].toDouble).toInt
   lazy val theta: Double =
-    (((hashes.max.toDouble / Int.MaxValue.toDouble) + 1) / 2)
+    if (hashes.isEmpty) 1.0
+    else (((hashes.max.toDouble / Int.MaxValue.toDouble) + 1) / 2)
 
   lazy val cardinality: Double = {
     if (hashes.size < maxItems) { // we're still in exact mode

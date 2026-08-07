@@ -22,6 +22,7 @@ import net.andimiller.schrodinger.HashesArbitrary
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimplePRNGMinHashArbitraries
+import net.andimiller.schrodinger.Hasher
 import org.scalacheck.Prop.forAll
 
 class SimplePRNGMinHashTests
@@ -51,6 +52,16 @@ class SimplePRNGMinHashTests
       delta = 0.05,
       "Expected jaccard to be around 0.5"
     )
+  }
+
+  test("items differing only in high hash bits should produce different sketches") {
+    implicit val hasher: Hasher[Long, Long] = identity
+    val low                                 =
+      SimplePRNGMinHash.fromItems[1, 32, Long](NonEmptyLazyList(0x0000000000000001L))
+    val high                                =
+      SimplePRNGMinHash.fromItems[1, 32, Long](NonEmptyLazyList(0x0001000000000001L))
+
+    assert(low.hashes != high.hashes)
   }
 
   property("Serialized size must be as expected") {
