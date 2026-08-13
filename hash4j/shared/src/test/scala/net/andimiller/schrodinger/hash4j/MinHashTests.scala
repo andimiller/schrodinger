@@ -21,15 +21,22 @@ import com.dynatrace.hash4j.hashing.Hashing
 import munit.DisciplineSuite
 import net.andimiller.schrodinger.Hasher
 import net.andimiller.schrodinger.HashesArbitrary
+import net.andimiller.schrodinger.JaccardLaws
+import net.andimiller.schrodinger.JaccardTests
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.hash4j.arb.MinHashArbitraries
 
-class MinHashTests extends DisciplineSuite with SimilarityHashTests[MinHash[512]] with MinHashArbitraries with HashesArbitrary {
+class MinHashTests extends DisciplineSuite with SimilarityHashTests[MinHash[512]] with JaccardTests[MinHash[512]] with MinHashArbitraries with HashesArbitrary {
 
   checkAll(
     "MinHash[512]",
     similarityHash
+  )
+
+  checkAll(
+    "MinHash[512] jaccard",
+    jaccard
   )
 
   test("Should do some vaguely sensible jaccard calculations") {
@@ -49,4 +56,7 @@ class MinHashTests extends DisciplineSuite with SimilarityHashTests[MinHash[512]
 
   override def laws: SimilarityHashLaws[MinHash[512]] =
     SimilarityHashLaws[MinHash[512]]
+
+  override def jaccardLaws: JaccardLaws[MinHash[512]] =
+    JaccardLaws[MinHash[512]]
 }

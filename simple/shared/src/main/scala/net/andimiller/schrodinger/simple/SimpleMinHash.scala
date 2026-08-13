@@ -19,6 +19,7 @@ package net.andimiller.schrodinger.simple
 import cats.Eq
 import cats.data.NonEmptyLazyList
 import net.andimiller.schrodinger.HasherFactory
+import net.andimiller.schrodinger.Jaccard
 import net.andimiller.schrodinger.SimilarityHash
 
 import scala.util.hashing.MurmurHash3
@@ -84,5 +85,8 @@ object SimpleMinHash {
 
   implicit def eq[HashCount <: Int]: Eq[SimpleMinHash[HashCount]] =
     Eq.by(_.hashes)
+
+  implicit def jaccardInstance[HashCount <: Int: ValueOf]: Jaccard[SimpleMinHash[HashCount]] =
+    (left, right) => jaccard(left, right)
 
 }

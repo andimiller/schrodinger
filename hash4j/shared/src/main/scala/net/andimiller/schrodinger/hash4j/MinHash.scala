@@ -22,6 +22,7 @@ import com.dynatrace.hash4j.similarity.ElementHashProvider
 import com.dynatrace.hash4j.similarity.SimilarityHashPolicy
 import com.dynatrace.hash4j.similarity.SimilarityHashing
 import net.andimiller.schrodinger.Hasher
+import net.andimiller.schrodinger.Jaccard
 import net.andimiller.schrodinger.SimilarityHash
 import net.andimiller.schrodinger.hash4j.utils.GenericMinHashMerge
 
@@ -97,4 +98,7 @@ object MinHash {
 
   implicit def hash4jMinHashEquals[Components <: Int]: Eq[MinHash[Components]] =
     (x: MinHash[Components], y: MinHash[Components]) => x.value.sameElements(y.value)
+
+  implicit def hash4jMinHashJaccard[Components <: Int: ValueOf]: Jaccard[MinHash[Components]] =
+    (left, right) => left.jaccard(right)
 }

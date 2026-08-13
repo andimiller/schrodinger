@@ -19,7 +19,9 @@ package net.andimiller.schrodinger.simple
 import cats.Eq
 import cats.data.NonEmptyLazyList
 import cats.kernel.BoundedSemilattice
+import net.andimiller.schrodinger.Cardinality
 import net.andimiller.schrodinger.HasherFactory
+import net.andimiller.schrodinger.Jaccard
 
 import scala.collection.mutable
 
@@ -110,20 +112,14 @@ object SimpleSetSketch {
     Math.max(0, Math.min(maxRegister, k))
   }
 
-  /** Estimate the Jaccard similarity of two sets using inclusion-exclusion:
-    * J = (|U| + |V| − |U∪V|) / |U∪V|, where the union sketch is the element-wise max of the two.
-    * This is the paper's naive approach — its joint estimator is more accurate but far less simple.
+  /** Estimate the Jaccard similarity of two sets using inclusion-exclusion, via the derived
+    * `Jaccard.fromCardinalityAndSemilattice` instance — see there for the formula and its caveats.
     */
   def jaccard[LgK <: Int: ValueOf](
       left: SimpleSetSketch[LgK],
       right: SimpleSetSketch[LgK]
-  ): Double = {
-    val union = SimpleSetSketch[LgK](
-      left.registers.zip(right.registers).map { case (x, y) => Math.max(x, y) }
-    )
-    val unionCardinality = union.cardinality
-    (left.cardinality + right.cardinality - unionCardinality) / unionCardinality
-  }
+  ): Double =
+    Jaccard[SimpleSetSketch[LgK]].jaccard(left, right)
 
   implicit def boundedSemilattice[LgK <: Int: ValueOf]: BoundedSemilattice[SimpleSetSketch[LgK]] =
     new BoundedSemilattice[SimpleSetSketch[LgK]] {
@@ -139,4 +135,10 @@ object SimpleSetSketch {
 
   implicit def eq[LgK <: Int]: Eq[SimpleSetSketch[LgK]] =
     Eq.by(_.registers)
+
+  implicit def cardinality[LgK <: Int]: Cardinality[SimpleSetSketch[LgK]] =
+    _.cardinality
+
+  implicit def jaccardInstance[LgK <: Int: ValueOf]: Jaccard[SimpleSetSketch[LgK]] =
+    Jaccard.fromCardinalityAndSemilattice
 }

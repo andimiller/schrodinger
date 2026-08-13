@@ -19,6 +19,7 @@ package net.andimiller.schrodinger.simple
 import cats.Eq
 import cats.implicits.*
 import cats.kernel.BoundedSemilattice
+import net.andimiller.schrodinger.Cardinality
 import net.andimiller.schrodinger.Hasher
 
 import scala.collection.SortedSet
@@ -85,5 +86,8 @@ object SimpleThetaSketch {
 
   implicit def eq[LgK <: Int]: Eq[SimpleThetaSketch[LgK]] =
     Eq.by(_.hashes.toSet)
+
+  implicit def cardinality[LgK <: Int]: Cardinality[SimpleThetaSketch[LgK]] =
+    _.cardinality
 
 }

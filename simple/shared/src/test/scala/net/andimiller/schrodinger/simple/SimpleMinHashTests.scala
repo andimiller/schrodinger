@@ -20,6 +20,8 @@ import cats.data.NonEmptyLazyList
 import munit.DisciplineSuite
 import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.HashesArbitrary
+import net.andimiller.schrodinger.JaccardLaws
+import net.andimiller.schrodinger.JaccardTests
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimpleMinHashArbitraries
@@ -27,12 +29,18 @@ import net.andimiller.schrodinger.simple.arb.SimpleMinHashArbitraries
 class SimpleMinHashTests
     extends DisciplineSuite
     with SimilarityHashTests[SimpleMinHash[32]]
+    with JaccardTests[SimpleMinHash[32]]
     with SimpleMinHashArbitraries
     with HashesArbitrary {
 
   checkAll(
     "SimpleMinHash[32]",
     similarityHash
+  )
+
+  checkAll(
+    "SimpleMinHash[32] jaccard",
+    jaccard
   )
 
   test("Jaccard should give an expected value") {
@@ -61,4 +69,7 @@ class SimpleMinHashTests
 
   override def laws: SimilarityHashLaws[SimpleMinHash[32]] =
     SimilarityHashLaws[SimpleMinHash[32]]
+
+  override def jaccardLaws: JaccardLaws[SimpleMinHash[32]] =
+    JaccardLaws[SimpleMinHash[32]]
 }

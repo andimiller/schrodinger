@@ -20,6 +20,8 @@ import cats.data.NonEmptyLazyList
 import munit.DisciplineSuite
 import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.HashesArbitrary
+import net.andimiller.schrodinger.JaccardLaws
+import net.andimiller.schrodinger.JaccardTests
 import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHashArbitraries
@@ -30,12 +32,18 @@ import java.nio.ByteBuffer
 class SimpleVariableMinHashTests
     extends DisciplineSuite
     with SimilarityHashTests[SimpleVariableMinHash[128, 8]]
+    with JaccardTests[SimpleVariableMinHash[128, 8]]
     with SimpleVariableMinHashArbitraries
     with HashesArbitrary {
 
   checkAll(
     "SimpleVariableMinHash[128, 8]",
     similarityHash
+  )
+
+  checkAll(
+    "SimpleVariableMinHash[128, 8] jaccard",
+    jaccard
   )
 
   test("Jaccard should give an expected value") {
@@ -93,4 +101,7 @@ class SimpleVariableMinHashTests
 
   override def laws: SimilarityHashLaws[SimpleVariableMinHash[128, 8]] =
     SimilarityHashLaws[SimpleVariableMinHash[128, 8]]
+
+  override def jaccardLaws: JaccardLaws[SimpleVariableMinHash[128, 8]] =
+    JaccardLaws[SimpleVariableMinHash[128, 8]]
 }

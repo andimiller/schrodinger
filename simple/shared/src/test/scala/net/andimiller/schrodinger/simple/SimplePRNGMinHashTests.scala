@@ -23,17 +23,25 @@ import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimplePRNGMinHashArbitraries
 import net.andimiller.schrodinger.Hasher
+import net.andimiller.schrodinger.JaccardLaws
+import net.andimiller.schrodinger.JaccardTests
 import org.scalacheck.Prop.forAll
 
 class SimplePRNGMinHashTests
     extends DisciplineSuite
     with SimilarityHashTests[SimplePRNGMinHash[128, 8]]
+    with JaccardTests[SimplePRNGMinHash[128, 8]]
     with SimplePRNGMinHashArbitraries
     with HashesArbitrary {
 
   checkAll(
     "SimplePRNGMinHash[128, 8]",
     similarityHash
+  )
+
+  checkAll(
+    "SimplePRNGMinHash[128, 8] jaccard",
+    jaccard
   )
 
   test("Jaccard should give an expected value") {
@@ -82,4 +90,7 @@ class SimplePRNGMinHashTests
 
   override def laws: SimilarityHashLaws[SimplePRNGMinHash[128, 8]] =
     SimilarityHashLaws[SimplePRNGMinHash[128, 8]]
+
+  override def jaccardLaws: JaccardLaws[SimplePRNGMinHash[128, 8]] =
+    JaccardLaws[SimplePRNGMinHash[128, 8]]
 }

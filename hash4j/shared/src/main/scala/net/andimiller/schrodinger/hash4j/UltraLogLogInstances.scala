@@ -19,6 +19,7 @@ package net.andimiller.schrodinger.hash4j
 import cats.Eq
 import cats.kernel.BoundedSemilattice
 import com.dynatrace.hash4j.distinctcount.UltraLogLog
+import net.andimiller.schrodinger.Cardinality
 
 trait UltraLogLogInstances {
   // you'll need to provide an implicit one of these to get instances, since we need to know the P value
@@ -35,6 +36,9 @@ trait UltraLogLogInstances {
       merged
     }
   }
+
+  implicit val ullCardinality: Cardinality[UltraLogLog] =
+    _.getDistinctCountEstimate()
 
   implicit val ullEq: Eq[UltraLogLog] = new Eq[UltraLogLog] {
     override def eqv(x: UltraLogLog, y: UltraLogLog): Boolean =

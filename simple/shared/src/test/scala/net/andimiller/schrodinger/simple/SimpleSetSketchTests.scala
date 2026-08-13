@@ -23,6 +23,8 @@ import cats.kernel.laws.BoundedSemilatticeLaws
 import cats.kernel.laws.discipline.BoundedSemilatticeTests
 import munit.DisciplineSuite
 import net.andimiller.schrodinger.HasherFactory
+import net.andimiller.schrodinger.JaccardLaws
+import net.andimiller.schrodinger.JaccardTests
 import net.andimiller.schrodinger.simple.arb.SimpleSetSketchArbitraries
 
 import java.nio.ByteBuffer
@@ -30,11 +32,17 @@ import java.nio.ByteBuffer
 class SimpleSetSketchTests
     extends DisciplineSuite
     with BoundedSemilatticeTests[SimpleSetSketch[8]]
+    with JaccardTests[SimpleSetSketch[8]]
     with SimpleSetSketchArbitraries {
 
   checkAll(
     "SimpleSetSketch[8]",
     boundedSemilattice
+  )
+
+  checkAll(
+    "SimpleSetSketch[8] jaccard",
+    jaccard
   )
 
   implicit val hasherFactory: HasherFactory[Int, String, Long] = { seed => str =>
@@ -99,6 +107,12 @@ class SimpleSetSketchTests
     )
   }
 
+  test("Jaccard of two empty sketches should be 0") {
+    val empty = BoundedSemilattice[SimpleSetSketch[4]].empty
+
+    assertEquals(SimpleSetSketch.jaccard(empty, empty), 0.0)
+  }
+
   test("Jaccard of a sketch with itself should be 1.0") {
     val sketch = SimpleSetSketch.fromItems[10, String](
       NonEmptyLazyList.fromSeq(LazyList.range(0, 1000).map(_.toString)).get
@@ -126,4 +140,7 @@ class SimpleSetSketchTests
 
   override def laws: BoundedSemilatticeLaws[SimpleSetSketch[8]] =
     BoundedSemilatticeLaws[SimpleSetSketch[8]]
+
+  override def jaccardLaws: JaccardLaws[SimpleSetSketch[8]] =
+    JaccardLaws[SimpleSetSketch[8]]
 }

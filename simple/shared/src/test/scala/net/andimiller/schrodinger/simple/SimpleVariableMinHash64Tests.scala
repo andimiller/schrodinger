@@ -24,6 +24,8 @@ import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.simple.arb.SimpleVariableMinHash64Arbitraries
 import net.andimiller.schrodinger.SimilarityHash
+import net.andimiller.schrodinger.JaccardLaws
+import net.andimiller.schrodinger.JaccardTests
 import org.scalacheck.Prop.forAll
 
 import java.nio.ByteBuffer
@@ -31,12 +33,18 @@ import java.nio.ByteBuffer
 class SimpleVariableMinHash64Tests
     extends DisciplineSuite
     with SimilarityHashTests[SimpleVariableMinHash64[128, 8]]
+    with JaccardTests[SimpleVariableMinHash64[128, 8]]
     with SimpleVariableMinHash64Arbitraries
     with HashesArbitrary {
 
   checkAll(
     "SimpleVariableMinHash64[128, 8]",
     similarityHash
+  )
+
+  checkAll(
+    "SimpleVariableMinHash64[128, 8] jaccard",
+    jaccard
   )
 
   test("Jaccard should give an expected value") {
@@ -90,4 +98,7 @@ class SimpleVariableMinHash64Tests
 
   override def laws: SimilarityHashLaws[SimpleVariableMinHash64[128, 8]] =
     SimilarityHashLaws[SimpleVariableMinHash64[128, 8]]
+
+  override def jaccardLaws: JaccardLaws[SimpleVariableMinHash64[128, 8]] =
+    JaccardLaws[SimpleVariableMinHash64[128, 8]]
 }

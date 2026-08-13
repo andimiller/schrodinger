@@ -22,6 +22,7 @@ import cats.kernel.laws.discipline.BoundedSemilatticeTests
 import com.dynatrace.hash4j.distinctcount.HyperLogLog
 import com.dynatrace.hash4j.hashing.Hashing
 import munit.DisciplineSuite
+import net.andimiller.schrodinger.Cardinality
 import net.andimiller.schrodinger.hash4j.arb.HyperLogLogArbitraries
 
 class HyperLogLogTests
@@ -46,7 +47,7 @@ class HyperLogLogTests
     }
 
     assertEqualsDouble(
-      hll.getDistinctCountEstimate(),
+      Cardinality[HyperLogLog].estimate(hll),
       10000,
       delta = 500,
       "Expected cardinality to be around 10000"

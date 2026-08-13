@@ -21,6 +21,7 @@ import cats.data.NonEmptyLazyList
 import cats.implicits.toTraverseOps
 import net.andimiller.schrodinger.HashShifter
 import net.andimiller.schrodinger.HasherFactory
+import net.andimiller.schrodinger.Jaccard
 import net.andimiller.schrodinger.SimilarityHash
 import scodec.Attempt
 import scodec.DecodeResult
@@ -146,4 +147,7 @@ object SimpleVariableMinHash64 {
   implicit def eq[HashCount <: Int, HashWidth <: Int]: Eq[SimpleVariableMinHash64[HashCount, HashWidth]] = Eq.instance { (a, b) =>
     a.hashes == b.hashes
   }
+
+  implicit def jaccardInstance[HashCount <: Int: ValueOf, HashWidth <: Int]: Jaccard[SimpleVariableMinHash64[HashCount, HashWidth]] =
+    (left, right) => jaccard(left, right)
 }

@@ -16,6 +16,8 @@
 
 package net.andimiller.schrodinger.simple
 
+import cats.Eq
+import cats.kernel.BoundedSemilattice
 import net.andimiller.schrodinger.QuantumBoolean
 import net.andimiller.schrodinger.HasherFactory
 
@@ -24,6 +26,11 @@ import scala.collection.immutable.BitSet
 /** A simple bloom filter backed by a BitSet of exactly `Bits` bits.
   *
   * Each seed of the hasher produces one bit index, reduced into `[0, Bits)`.
+  *
+  * Merging two filters is element-wise OR — the filter of the union — which makes this a
+  * `BoundedSemilattice`. The merge is only meaningful when both filters use the same hash
+  * functions and the same `Bits`; the type enforces the latter, the shared implicit hasher
+  * the former.
   *
   * @tparam Bits
   *   number of bits in the filter (also the number of hash functions used)
@@ -50,4 +57,20 @@ object SimpleBloomFilter {
   def empty[Bits <: Int: ValueOf, Input](implicit hasherFactory: HasherFactory[Int, Input, Int]): SimpleBloomFilter[Bits, Input] =
     SimpleBloomFilter[Bits, Input](BitSet.empty)
 
+  implicit def boundedSemilattice[Bits <: Int: ValueOf, Input](implicit
+      hasherFactory: HasherFactory[Int, Input, Int]
+  ): BoundedSemilattice[SimpleBloomFilter[Bits, Input]] =
+    new BoundedSemilattice[SimpleBloomFilter[Bits, Input]] {
+      override def empty: SimpleBloomFilter[Bits, Input] =
+        SimpleBloomFilter.empty[Bits, Input]
+
+      override def combine(
+          x: SimpleBloomFilter[Bits, Input],
+          y: SimpleBloomFilter[Bits, Input]
+      ): SimpleBloomFilter[Bits, Input] =
+        SimpleBloomFilter(x.set | y.set)
+    }
+
+  implicit def eq[Bits <: Int, Input]: Eq[SimpleBloomFilter[Bits, Input]] =
+    Eq.by(_.set)
 }
