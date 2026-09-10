@@ -46,6 +46,7 @@ flowchart BT
     SSK[SetSketch]
     ULL[UltraLogLog]
     HLL[HyperLogLog]
+    CVM[CvmSketch]
   end
   subgraph FREQ["frequency"]
     FCOUNT{{"count occurrences — never underestimates"}}
@@ -63,6 +64,7 @@ flowchart BT
   SSK --> CJAC
   ULL --> CDIST
   HLL --> CDIST
+  CVM --> CDIST
   CMS --> FCOUNT
   BLOOM --> FMEM
 
@@ -105,6 +107,7 @@ All provide `SimilarityHash` (union = element-wise min) and `Jaccard` (fraction 
 | Type | Provides |
 |---|---|
 | `SimpleThetaSketch[LgK]` | `BoundedSemilattice` + `Cardinality`; exact while small, sampled after |
+| `SimpleCvmSketch[LgK]` | `BoundedSemilattice` + `Cardinality`; CVM's uniform random sample made deterministic by deriving it from the hash, so merges are lossless |
 | `SimpleSetSketch[LgK]` | `BoundedSemilattice` + `Cardinality` + `Jaccard` (inclusion-exclusion); closed-form estimator, no empirical tables |
 
 ### Filter

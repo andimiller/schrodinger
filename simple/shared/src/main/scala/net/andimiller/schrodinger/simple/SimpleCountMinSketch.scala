@@ -22,17 +22,15 @@ import net.andimiller.schrodinger.HasherFactory
 
 /** A Count-Min Sketch, a compact frequency estimator (Cormode & Muthukrishnan, 2005).
   *
-  * It keeps a matrix of `Rows × Width` counters. Adding an item hashes it with one hash function
-  * per row and increments one counter in each row; asking for an item's frequency returns the
-  * smallest counter it maps to across all rows.
+  * It keeps a matrix of `Rows × Width` counters. Adding an item hashes it with one hash function per row and increments one counter in each
+  * row; asking for an item's frequency returns the smallest counter it maps to across all rows.
   *
-  * Collisions can only inflate a counter, never deflate it, so the answer is always at least the
-  * true count — the classic "never underestimates" property of count-min sketches.
+  * Collisions can only inflate a counter, never deflate it, so the answer is always at least the true count — the classic "never
+  * underestimates" property of count-min sketches.
   *
-  * Unlike every other sketch in this library, the merge is element-wise addition, not min or max:
-  * it counts multiplicities, so merging the same stream twice counts it twice. That makes it the
-  * library's first non-idempotent sketch — a semilattice cannot represent frequencies, a
-  * commutative monoid can.
+  * Unlike every other sketch in this library, the merge is element-wise addition, not min or max: it counts multiplicities, so merging the
+  * same stream twice counts it twice. That makes it the library's first non-idempotent sketch — a semilattice cannot represent frequencies,
+  * a commutative monoid can.
   *
   * @param counters
   *   the counter matrix, one row per hash function

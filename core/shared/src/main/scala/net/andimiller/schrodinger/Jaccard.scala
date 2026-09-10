@@ -30,11 +30,10 @@ object Jaccard {
 
   /** Derive a Jaccard from inclusion-exclusion: J = (|U| + |V| − |U∪V|) / |U∪V|.
     *
-    * This works for any sketch that can estimate its own cardinality and whose `combine` is the
-    * union — which is every cardinality sketch in this library. It is the "naive" estimator from
-    * the SetSketch paper: it only uses the three cardinalities, discarding any per-component joint
-    * information the sketch may hold. Summon it explicitly when needed; it is not an implicit
-    * derivation, so it can never silently override a sketch's own (better) Jaccard instance.
+    * This works for any sketch that can estimate its own cardinality and whose `combine` is the union — which is every cardinality sketch
+    * in this library. It is the "naive" estimator from the SetSketch paper: it only uses the three cardinalities, discarding any
+    * per-component joint information the sketch may hold. Summon it explicitly when needed; it is not an implicit derivation, so it can
+    * never silently override a sketch's own (better) Jaccard instance.
     */
   def fromCardinalityAndSemilattice[T](implicit
       cardinality: Cardinality[T],

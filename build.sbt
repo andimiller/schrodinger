@@ -51,7 +51,7 @@ ${scala.Console.YELLOW}Scala ${scalaVersion.value}${scala.Console.RESET}
   )
 
 lazy val commonSettings = Seq(
-  logo := "",
+  logo                := "",
   // sbt-typelevel 0.6.1 hardcodes kind-projector 0.13.2, which has no build for 2.13.16+
   libraryDependencies := libraryDependencies.value.map { d =>
     if (d.name == "kind-projector") d.withRevision("0.13.3") else d

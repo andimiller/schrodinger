@@ -22,15 +22,12 @@ import net.andimiller.schrodinger.HasherFactory
 
 /** A SimHash, a locality-sensitive hash for text similarity (Charikar, 2002).
   *
-  * A document is a bag of shingles (typically words). Each shingle votes +1 or −1 on every one of
-  * the `Components` hash functions, and the document's signature is the majority vote per
-  * component: bit i is set when more shingles voted + than − (ties count as 0). Near-duplicate
-  * documents share most shingles, so their signatures agree on most bits; similarity is
-  * `1 − hammingDistance / Components`.
+  * A document is a bag of shingles (typically words). Each shingle votes +1 or −1 on every one of the `Components` hash functions, and the
+  * document's signature is the majority vote per component: bit i is set when more shingles voted + than − (ties count as 0).
+  * Near-duplicate documents share most shingles, so their signatures agree on most bits; similarity is `1 − hammingDistance / Components`.
   *
-  * This is the multiset counterpart to MinHash: minhash answers "do these sets overlap?" while
-  * simhash answers "do these texts read alike?", where repetition matters. Like
-  * SimpleCountMinSketch, merging is element-wise addition and is therefore not idempotent.
+  * This is the multiset counterpart to MinHash: minhash answers "do these sets overlap?" while simhash answers "do these texts read
+  * alike?", where repetition matters. Like SimpleCountMinSketch, merging is element-wise addition and is therefore not idempotent.
   *
   * @param counts
   *   the running vote tally, one per component

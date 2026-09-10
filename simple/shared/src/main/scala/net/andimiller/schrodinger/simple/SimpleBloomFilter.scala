@@ -27,10 +27,8 @@ import scala.collection.immutable.BitSet
   *
   * Each seed of the hasher produces one bit index, reduced into `[0, Bits)`.
   *
-  * Merging two filters is element-wise OR — the filter of the union — which makes this a
-  * `BoundedSemilattice`. The merge is only meaningful when both filters use the same hash
-  * functions and the same `Bits`; the type enforces the latter, the shared implicit hasher
-  * the former.
+  * Merging two filters is element-wise OR — the filter of the union — which makes this a `BoundedSemilattice`. The merge is only meaningful
+  * when both filters use the same hash functions and the same `Bits`; the type enforces the latter, the shared implicit hasher the former.
   *
   * @tparam Bits
   *   number of bits in the filter (also the number of hash functions used)

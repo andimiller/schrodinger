@@ -22,10 +22,7 @@ import munit.DisciplineSuite
 import net.andimiller.schrodinger.HasherFactory
 import net.andimiller.schrodinger.simple.arb.SimpleSimHashArbitraries
 
-class SimpleSimHashTests
-    extends DisciplineSuite
-    with CommutativeMonoidTests[SimpleSimHash[128, String]]
-    with SimpleSimHashArbitraries {
+class SimpleSimHashTests extends DisciplineSuite with CommutativeMonoidTests[SimpleSimHash[128, String]] with SimpleSimHashArbitraries {
 
   implicit val hasherFactory: HasherFactory[Int, String, Int] =
     HasherFactory.murmur3

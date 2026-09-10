@@ -27,7 +27,12 @@ import net.andimiller.schrodinger.SimilarityHashLaws
 import net.andimiller.schrodinger.SimilarityHashTests
 import net.andimiller.schrodinger.hash4j.arb.MinHashArbitraries
 
-class MinHashTests extends DisciplineSuite with SimilarityHashTests[MinHash[512]] with JaccardTests[MinHash[512]] with MinHashArbitraries with HashesArbitrary {
+class MinHashTests
+    extends DisciplineSuite
+    with SimilarityHashTests[MinHash[512]]
+    with JaccardTests[MinHash[512]]
+    with MinHashArbitraries
+    with HashesArbitrary {
 
   checkAll(
     "MinHash[512]",

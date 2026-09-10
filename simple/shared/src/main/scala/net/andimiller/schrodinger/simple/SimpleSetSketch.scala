@@ -27,22 +27,19 @@ import scala.collection.mutable
 
 /** A SetSketch, as introduced in "SetSketch: Filling the Gap between MinHash and HyperLogLog" (Ertl, VLDB 2021).
   *
-  * A SetSketch summarizes a set in `2^LgK` small integer registers. Adding an item hashes it once
-  * per register and keeps the largest value seen in each:
+  * A SetSketch summarizes a set in `2^LgK` small integer registers. Adding an item hashes it once per register and keeps the largest value
+  * seen in each:
   *
-  *   1. read a uniform value `u ∈ (0, 1)` from the hash bits
-  *   2. convert it to an exponential sample `X = −ln(u)/a`  (so `X ~ Exp(a)`)
-  *   3. record `⌊1 − log₂ X⌋` — roughly "how small X is, measured in powers of two"
+  *   1. read a uniform value `u ∈ (0, 1)` from the hash bits 2. convert it to an exponential sample `X = −ln(u)/a` (so `X ~ Exp(a)`) 3.
+  *      record `⌊1 − log₂ X⌋` — roughly "how small X is, measured in powers of two"
   *
-  * With n distinct items, the smallest X a register sees is typically about `1/(n·a)`, so the
-  * register lands near `log₂(n·a)`: register values grow logarithmically with set size, letting one
-  * fixed-size sketch cover sets of any size. HyperLogLog registers do the same job by counting
-  * leading zeros; SetSketch's exponential mapping instead yields a closed-form cardinality
-  * estimator (no empirically calibrated tables) plus similarity estimation — that is what fills
-  * the gap between MinHash and HyperLogLog.
+  * With n distinct items, the smallest X a register sees is typically about `1/(n·a)`, so the register lands near `log₂(n·a)`: register
+  * values grow logarithmically with set size, letting one fixed-size sketch cover sets of any size. HyperLogLog registers do the same job
+  * by counting leading zeros; SetSketch's exponential mapping instead yields a closed-form cardinality estimator (no empirically calibrated
+  * tables) plus similarity estimation — that is what fills the gap between MinHash and HyperLogLog.
   *
-  * This is the "definitional" version from the paper: every item is hashed once per register, which
-  * is the clearest way to demonstrate the algorithm (the paper's ordered-update variant exists for speed).
+  * This is the "definitional" version from the paper: every item is hashed once per register, which is the clearest way to demonstrate the
+  * algorithm (the paper's ordered-update variant exists for speed).
   *
   * @param registers
   *   the register values, one per bucket
@@ -112,8 +109,8 @@ object SimpleSetSketch {
     Math.max(0, Math.min(maxRegister, k))
   }
 
-  /** Estimate the Jaccard similarity of two sets using inclusion-exclusion, via the derived
-    * `Jaccard.fromCardinalityAndSemilattice` instance — see there for the formula and its caveats.
+  /** Estimate the Jaccard similarity of two sets using inclusion-exclusion, via the derived `Jaccard.fromCardinalityAndSemilattice`
+    * instance — see there for the formula and its caveats.
     */
   def jaccard[LgK <: Int: ValueOf](
       left: SimpleSetSketch[LgK],

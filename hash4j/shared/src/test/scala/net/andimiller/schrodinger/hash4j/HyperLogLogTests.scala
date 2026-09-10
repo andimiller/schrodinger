@@ -25,10 +25,7 @@ import munit.DisciplineSuite
 import net.andimiller.schrodinger.Cardinality
 import net.andimiller.schrodinger.hash4j.arb.HyperLogLogArbitraries
 
-class HyperLogLogTests
-    extends DisciplineSuite
-    with BoundedSemilatticeTests[HyperLogLog]
-    with HyperLogLogArbitraries {
+class HyperLogLogTests extends DisciplineSuite with BoundedSemilatticeTests[HyperLogLog] with HyperLogLogArbitraries {
 
   implicit val p: HyperLogLogP = HyperLogLogP(12)
 
